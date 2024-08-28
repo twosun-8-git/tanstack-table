@@ -4,6 +4,7 @@
   --grayLightEx: #f1f1f1;
   --green: #00a593;
   --blue: rgb(0, 117, 255);
+  --red: rgb(237, 102, 102);
   --border: 1px solid var(--grayLight);
 }
 * {
@@ -105,6 +106,11 @@
     transform: scaleY(-1) rotate(-135deg);
   }
 }
+input[type="checkbox"] {
+  display: block;
+  width: 18px;
+  height: 18px;
+}
 .wrapper {
   width: min(var(--width), 100%);
   height: 100vh;
@@ -168,6 +174,27 @@ header p {
 .nav dd {
   border-left: 1px solid var(--grayLight);
 }
+.column-visibility {
+  padding: 16px;
+  border: var(--border);
+  border-radius: 6px;
+  margin-bottom: 24px;
+}
+.column-visibility p {
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+.column-visibility ul {
+  display: flex;
+  list-style: none;
+  gap: 16px;
+  padding-top: 8px;
+}
+.column-visibility label {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
 .table-wrapper {
   border: var(--border);
   border-radius: 6px;
@@ -209,16 +236,18 @@ header p {
 .table tfoot tr {
   border-top: var(--border);
 }
+.table tbody td span {
+  color: #aaa;
+}
+.table tbody td span.male {
+  color: var(--blue);
+}
+.table tbody td span.female {
+  color: var(--red);
+}
 .table tfoot td {
   font-weight: normal;
   font-size: 12px;
   padding-block: 8px;
   color: #aaa;
-}
-.checkbox input {
-  display: block;
-  width: 18px;
-  height: 18px;
-  border: var(--border);
-  border-radius: 0;
 }

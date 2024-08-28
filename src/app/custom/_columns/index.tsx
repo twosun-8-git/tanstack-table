@@ -16,6 +16,7 @@ const columnHelper = createColumnHelper<RowData>();
 export const columns = [
   columnHelper.display({
     id: "select",
+    enableHiding: false,
     // All Check
     header: ({ table }) => {
       return (
@@ -41,7 +42,6 @@ export const columns = [
     },
   }),
   columnHelper.accessor("no", {
-    header: "No",
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
   }),
@@ -49,26 +49,33 @@ export const columns = [
     header: "Last Name",
     cell: (info) => info.getValue(),
     footer: "苗字",
+    enableSorting: false,
   }),
   columnHelper.accessor("firstName", {
     header: "First Name",
     cell: (info) => info.getValue(),
     footer: "名前",
+    enableSorting: false,
   }),
   columnHelper.accessor("age", {
     header: "Age",
-    cell: (info) => info.getValue(),
+    cell: (info) => <i>{info.getValue()} 歳</i>,
     footer: "年齢",
   }),
 
   columnHelper.accessor("score", {
     header: "Score",
-    cell: (info) => info.getValue(),
+    cell: (info) => <i>{info.getValue()} 点</i>,
     footer: "点数",
   }),
   columnHelper.accessor("gender", {
     header: "Gender",
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      const _value = info.getValue();
+      const _className =
+        _value === "男性" ? "male" : _value === "女性" ? "female" : "";
+      return <span className={_className}>{_value}</span>;
+    },
     footer: "性別",
   }),
 ];

@@ -2,11 +2,16 @@
 
 import { useEffect, useState } from "react";
 import {
+  Column,
+  ColumnDef,
+  Row,
   flexRender,
   getCoreRowModel,
   useReactTable,
+  getSortedRowModel,
   RowSelectionState,
-  Row,
+  SortingState,
+  VisibilityState,
 } from "@tanstack/react-table";
 
 import { columns, RowData } from "./_columns";
@@ -15,12 +20,10 @@ import { rows } from "@/app/_rows";
 export default function Page() {
   const [data, _setData] = useState(() => [...rows]);
 
-  // Row Selection
+  /** Row Selection */
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
-
-  /** 確認用 */
+  // 確認用
   useEffect(() => {
     console.info("rowSelection: ", rowSelection);
   }, [rowSelection]);
@@ -28,13 +31,6 @@ export default function Page() {
   const handleRowClick = (row: Row<RowData>, isCheck: boolean = true) => {
     // enableRowSelectionの条件にマッチしていない場合は何もしない
     if (!row.getCanSelect()) return;
-
-    // 選択したRowのidを格納
-    setSelectedRows((prev) => {
-      const _newSet = new Set(prev);
-      _newSet.has(row.id) ? _newSet.delete(row.id) : _newSet.add(row.id);
-      return _newSet;
-    });
 
     // RowクリックでCheckboxもToggle連動するかを制御
     if (isCheck) {
@@ -47,29 +43,96 @@ export default function Page() {
     // クリックしたRowのオリジナルデータを表示
     console.info("Index: ", row.index);
     console.info("Original: ", row.original);
-    console.info("rowSelection: ", rowSelection);
-    console.info("selectedRows: ", Array.from(selectedRows));
   };
+
+  /** Sort */
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  const sortIcon = (column: Column<RowData>) => {
+    const sortDirection = column.getIsSorted();
+    if (!sortDirection) return null;
+    return sortDirection === "asc" ? "↑" : "↓";
+  };
+
+  /** Visibility */
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   /** Table 作成 */
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+
     // Row Selection
-    enableRowSelection: (row) =>
-      row.original.age >= 18 && row.original.score > 5, // / Rowの選択条件 (defalut: true)
+    // enableRowSelection: (row) => row.original.age >= 18, // Rowの選択条件 (defalut: true)
     onRowSelectionChange: setRowSelection, // Row 選択時（row index: boolean）
     enableMultiRowSelection: true, // Rowの複数選択 (defalut: true)
+
+    // Sort
+    enableSorting: true, // ソート機能 (defalut: true)
+    enableMultiSort: true, // マルチソート（defalut: true）
+    sortDescFirst: true, // ソートの実行順序（default: true[ desc -> asc ], false[ asc -> desc ]）
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+
+    // Visibility
+    onColumnVisibilityChange: setColumnVisibility,
     state: {
       rowSelection,
+      sorting,
+      columnVisibility,
     },
   });
+
+  const getColumnHeaderText = (column: ColumnDef<RowData>) => {
+    if (typeof column.header === "string") {
+      return column.header;
+    } else if (typeof column.header === "function") {
+      // 関数の場合、実行結果を文字列として返す
+      const result = column.header({} as any); // 簡易的な実装
+      return typeof result === "string" ? result : column.id;
+    } else {
+      return column.id; // フォールバックとしてidを使用
+    }
+  };
 
   return (
     <main>
       <div className="current">
         <span>custom</span>
+      </div>
+      <div className="column-visibility">
+        <p>Column Visibility</p>
+        <ul>
+          <li>
+            <label>
+              <input
+                type="checkbox"
+                checked={table.getIsAllColumnsVisible()}
+                onChange={table.getToggleAllColumnsVisibilityHandler()}
+              />
+              All
+            </label>
+          </li>
+          {table
+            .getAllColumns()
+            .filter((column) => column.columnDef.enableHiding !== false)
+            .map((column) => {
+              console.log(typeof column.columnDef.header);
+              return (
+                <li key={column.id}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={column.getIsVisible()}
+                      onChange={column.getToggleVisibilityHandler()}
+                    />
+                    {column.id}
+                  </label>
+                </li>
+              );
+            })}
+        </ul>
       </div>
       <div className="table-wrapper">
         <table className="table">
@@ -77,13 +140,18 @@ export default function Page() {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <th key={header.id} colSpan={header.colSpan}>
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    onClick={header.column.getToggleSortingHandler()}
+                  >
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
                           header.getContext()
                         )}
+                    {sortIcon(header.column)}
                   </th>
                 ))}
               </tr>
@@ -94,7 +162,7 @@ export default function Page() {
               <tr
                 key={row.id}
                 className={`
-                  ${selectedRows.has(row.id) ? "selected" : ""}
+                  ${rowSelection[row.index] ? "selected" : ""}
                   ${row.getCanSelect() ? "selectable" : "no-selectable"}
                 `}
                 onClick={() => handleRowClick(row)}
