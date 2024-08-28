@@ -193,8 +193,17 @@ header p {
 .table thead th:not(:first-of-type) {
   border-left: 1px solid rgb(255, 255, 255, 0.5);
 }
+.table tbody tr.selectable {
+  cursor: pointer;
+}
 .table tbody tr.selected {
   background: #eef6f5;
+}
+.table tbody tr.no-selectable {
+  cursor: not-allowed;
+}
+.table tbody tr.no-selectable td {
+  opacity: 0.5;
 }
 .table tbody tr + tr,
 .table tfoot tr {

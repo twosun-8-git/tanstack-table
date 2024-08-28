@@ -18,21 +18,37 @@ export default function Page() {
   // Row Selection
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
+  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+
   /** 確認用 */
   useEffect(() => {
     console.info("rowSelection: ", rowSelection);
   }, [rowSelection]);
 
-  const handleRowClick = (row: Row<RowData>, isCheck: boolean = false) => {
+  const handleRowClick = (row: Row<RowData>, isCheck: boolean = true) => {
+    // enableRowSelectionの条件にマッチしていない場合は何もしない
+    if (!row.getCanSelect()) return;
+
+    // 選択したRowのidを格納
+    setSelectedRows((prev) => {
+      const _newSet = new Set(prev);
+      _newSet.has(row.id) ? _newSet.delete(row.id) : _newSet.add(row.id);
+      return _newSet;
+    });
+
     // RowクリックでCheckboxもToggle連動するかを制御
     if (isCheck) {
-      row.toggleSelected();
+      setRowSelection((prev) => ({
+        ...prev,
+        [row.id]: !prev[row.id],
+      }));
     }
 
     // クリックしたRowのオリジナルデータを表示
     console.info("Index: ", row.index);
     console.info("Original: ", row.original);
     console.info("rowSelection: ", rowSelection);
+    console.info("selectedRows: ", Array.from(selectedRows));
   };
 
   /** Table 作成 */
@@ -40,6 +56,9 @@ export default function Page() {
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
+    // Row Selection
+    enableRowSelection: (row) =>
+      row.original.age >= 18 && row.original.score > 5, // / Rowの選択条件 (defalut: true)
     onRowSelectionChange: setRowSelection, // Row 選択時（row index: boolean）
     enableMultiRowSelection: true, // Rowの複数選択 (defalut: true)
     state: {
@@ -74,8 +93,11 @@ export default function Page() {
             {table.getRowModel().rows.map((row) => (
               <tr
                 key={row.id}
-                className={row.getIsSelected() ? "selected" : undefined}
-                onClick={() => handleRowClick(row, true)}
+                className={`
+                  ${selectedRows.has(row.id) ? "selected" : ""}
+                  ${row.getCanSelect() ? "selectable" : "no-selectable"}
+                `}
+                onClick={() => handleRowClick(row)}
               >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id}>

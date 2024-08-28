@@ -57,14 +57,14 @@ export default function Page() {
             {table.getFooterGroups().map((footerGroup) => (
               <tr key={footerGroup.id}>
                 {footerGroup.headers.map((header) => (
-                  <th key={header.id}>
+                  <td key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
                           header.column.columnDef.footer,
                           header.getContext()
                         )}
-                  </th>
+                  </td>
                 ))}
               </tr>
             ))}

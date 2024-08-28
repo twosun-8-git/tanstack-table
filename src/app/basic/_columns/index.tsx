@@ -3,7 +3,7 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { Checkbox } from "@/app/_components/";
 
 type Table = {
-  id: number;
+  no: number;
   lastName: string;
   firstName: string;
   age: number;
@@ -14,8 +14,8 @@ type Table = {
 const columnHelper = createColumnHelper<Table>();
 
 export const columns = [
-  columnHelper.accessor("id", {
-    header: "ID",
+  columnHelper.accessor("no", {
+    header: "No",
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
   }),
