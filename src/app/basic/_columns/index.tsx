@@ -1,17 +1,8 @@
 import { createColumnHelper } from "@tanstack/react-table";
 
-import { Checkbox } from "@/app/_components/";
+import { Student } from "@/app/_rows/type";
 
-type Table = {
-  no: number;
-  lastName: string;
-  firstName: string;
-  age: number;
-  score: number;
-  gender: string;
-};
-
-const columnHelper = createColumnHelper<Table>();
+const columnHelper = createColumnHelper<Student>();
 
 export const columns = [
   columnHelper.accessor("no", {
@@ -29,32 +20,34 @@ export const columns = [
     cell: (info) => info.getValue(),
     footer: "名前",
   }),
-  columnHelper.accessor("age", {
-    header: "Age",
-    cell: (info) => info.getValue(),
-    footer: "年齢",
-  }),
-
-  columnHelper.accessor("score", {
-    header: "Score",
-    cell: (info) => info.getValue(),
-    footer: "点数",
-  }),
   columnHelper.accessor("gender", {
     header: "Gender",
     cell: (info) => info.getValue(),
     footer: "性別",
   }),
-
-  // {
-  //   accessorKey: "birth",
-  //   header: "誕生日",
-  //   cell: (info: any) => info.getValue(),
-  // },
-  // {
-  //   accessorKey: "delete",
-  //   header: "削除",
-  //   cell: (info:any) => info.getValue(),
-  //   enableHiding: true // カラムの表示/非表示をユーザーが切替できるか
-  // },
+  columnHelper.accessor("grade", {
+    header: "Grade",
+    cell: (info) => info.getValue(),
+    footer: "学年",
+  }),
+  columnHelper.accessor("class", {
+    header: "Class",
+    cell: (info) => info.getValue(),
+    footer: "組",
+  }),
+  columnHelper.accessor("lang", {
+    header: "Langage",
+    cell: (info) => info.getValue(),
+    footer: "国語",
+  }),
+  columnHelper.accessor("arith", {
+    header: "Arithmetic",
+    cell: (info) => info.getValue(),
+    footer: "算数",
+  }),
+  columnHelper.accessor("science", {
+    header: "Science",
+    cell: (info) => info.getValue(),
+    footer: "理科",
+  }),
 ];

@@ -1,30 +1,18 @@
 import { createColumnHelper } from "@tanstack/react-table";
 
-import { Checkbox } from "@/app/_components/";
+import { Student } from "@/app/_rows/type";
 
-export type RowData = {
-  no: number;
-  lastName: string;
-  firstName: string;
-  age: number;
-  score: number;
-  gender: string;
-};
-
-const columnHelper = createColumnHelper<RowData>();
+const columnHelper = createColumnHelper<Student>();
 
 export const columns = [
   columnHelper.display({
     id: "select",
-    enableHiding: false,
     // All Check
     header: ({ table }) => {
       return (
-        <Checkbox
-          checked={table.getIsAllRowsSelected()}
-          indeterminate={table.getIsSomeRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
+        <div className="checkbox">
+          <input type="checkbox" />
+        </div>
       );
     },
     // Per Cell Check
@@ -33,49 +21,100 @@ export const columns = [
       // const age = row.original.age; // OK: ageはRowDataに存在する
       // const invalid = row.original.invalid; // エラー: invalidはRowDataに存在しない
       return (
-        <Checkbox
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          onChange={row.getToggleSelectedHandler()}
-        />
+        <div className="checkbox">
+          <input type="checkbox" />
+        </div>
       );
     },
   }),
   columnHelper.accessor("no", {
+    header: "No",
     cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
+    footer: (info) => info.column.id.toUpperCase(),
   }),
-  columnHelper.accessor("lastName", {
-    header: "Last Name",
-    cell: (info) => info.getValue(),
-    footer: "苗字",
-    enableSorting: false,
+  columnHelper.group({
+    header: "Person",
+    footer: "生徒",
+    columns: [
+      columnHelper.display({
+        id: "fullName",
+        header: () => <b>Full Name</b>,
+        cell: (info) => {
+          const { firstName, lastName } = info.row.original;
+          return `${lastName} ${firstName}`;
+        },
+      }),
+      columnHelper.accessor("gender", {
+        header: "Gender",
+        cell: (info) => info.getValue(),
+        footer: "性別",
+      }),
+    ],
   }),
-  columnHelper.accessor("firstName", {
-    header: "First Name",
-    cell: (info) => info.getValue(),
-    footer: "名前",
-    enableSorting: false,
+  columnHelper.group({
+    header: "Class",
+    footer: "学年と組",
+    columns: [
+      columnHelper.accessor("grade", {
+        header: "Grade",
+        cell: (info) => `${info.getValue()} 年`,
+        footer: "学年",
+      }),
+      columnHelper.accessor("class", {
+        header: "Class",
+        cell: (info) => `${info.getValue()} 組`,
+        footer: "組",
+      }),
+    ],
   }),
-  columnHelper.accessor("age", {
-    header: "Age",
-    cell: (info) => <i>{info.getValue()} 歳</i>,
-    footer: "年齢",
+  columnHelper.group({
+    header: "Test",
+    footer: "テスト",
+    columns: [
+      columnHelper.accessor("lang", {
+        header: "Langage",
+        cell: (info) => {
+          const _className = info.getValue() <= 80 ? "red" : "";
+          return <i className={_className}>{info.getValue()} 点</i>;
+        },
+        footer: "国語",
+      }),
+      columnHelper.accessor("arith", {
+        header: "Arithmetic",
+        cell: (info) => {
+          const _className = info.getValue() <= 80 ? "red" : "";
+          return <i className={_className}>{info.getValue()} 点</i>;
+        },
+        footer: "算数",
+      }),
+      columnHelper.accessor("science", {
+        header: "Science",
+        cell: (info) => {
+          const _className = info.getValue() <= 80 ? "red" : "";
+          return <i className={_className}>{info.getValue()} 点</i>;
+        },
+        footer: "理科",
+      }),
+    ],
   }),
-
-  columnHelper.accessor("score", {
-    header: "Score",
-    cell: (info) => <i>{info.getValue()} 点</i>,
-    footer: "点数",
-  }),
-  columnHelper.accessor("gender", {
-    header: "Gender",
+  columnHelper.display({
+    id: "total",
+    header: "Total",
     cell: (info) => {
-      const _value = info.getValue();
-      const _className =
-        _value === "男性" ? "male" : _value === "女性" ? "female" : "";
-      return <span className={_className}>{_value}</span>;
+      const { lang, arith, science } = info.row.original;
+      const _sum = lang + arith + science;
+      return `${_sum} 点`;
     },
-    footer: "性別",
+    footer: "合計",
+  }),
+  columnHelper.display({
+    id: "average",
+    header: "Average",
+    cell: (info) => {
+      const { lang, arith, science } = info.row.original;
+      const _average = Math.floor((lang + arith + science) / 3);
+      return `${_average} 点`;
+    },
+    footer: "平均",
   }),
 ];

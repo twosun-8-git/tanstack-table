@@ -198,7 +198,7 @@ header p {
 .table-wrapper {
   border: var(--border);
   border-radius: 6px;
-  overflow: hidden;
+  overflow: scroll;
 }
 .table {
   font-size: 14px;
@@ -209,6 +209,7 @@ header p {
 .table td {
   text-align: left;
   padding: 14px;
+  white-space: nowrap;
 }
 .table thead th {
   background: var(--green);
