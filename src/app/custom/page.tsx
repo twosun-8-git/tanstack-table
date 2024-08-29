@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Column,
-  ColumnDef,
   Row,
   flexRender,
   getCoreRowModel,
@@ -14,7 +13,8 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 
-import { columns, RowData } from "./_columns";
+import { Student } from "@/app/_rows/type";
+import { columns } from "./_columns";
 import { rows } from "@/app/_rows";
 
 export default function Page() {
@@ -28,7 +28,7 @@ export default function Page() {
     console.info("rowSelection: ", rowSelection);
   }, [rowSelection]);
 
-  const handleRowClick = (row: Row<RowData>, isCheck: boolean = true) => {
+  const handleRowClick = (row: Row<Student>, isCheck: boolean = true) => {
     // enableRowSelectionの条件にマッチしていない場合は何もしない
     if (!row.getCanSelect()) return;
 
@@ -48,7 +48,7 @@ export default function Page() {
   /** Sort */
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const sortIcon = (column: Column<RowData>) => {
+  const sortIcon = (column: Column<Student>) => {
     const sortDirection = column.getIsSorted();
     if (!sortDirection) return null;
     return sortDirection === "asc" ? "↑" : "↓";
@@ -58,7 +58,7 @@ export default function Page() {
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   /** Table 作成 */
-  const table = useReactTable({
+  const table = useReactTable<Student>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -84,25 +84,13 @@ export default function Page() {
     },
   });
 
-  const getColumnHeaderText = (column: ColumnDef<RowData>) => {
-    if (typeof column.header === "string") {
-      return column.header;
-    } else if (typeof column.header === "function") {
-      // 関数の場合、実行結果を文字列として返す
-      const result = column.header({} as any); // 簡易的な実装
-      return typeof result === "string" ? result : column.id;
-    } else {
-      return column.id; // フォールバックとしてidを使用
-    }
-  };
-
   return (
     <main>
       <div className="current">
         <span>custom</span>
       </div>
       <div className="column-visibility">
-        <p>Column Visibility</p>
+        <p>カラムの表示</p>
         <ul>
           <li>
             <label>
@@ -115,23 +103,20 @@ export default function Page() {
             </label>
           </li>
           {table
-            .getAllColumns()
+            .getAllLeafColumns()
             .filter((column) => column.columnDef.enableHiding !== false)
-            .map((column) => {
-              console.log(typeof column.columnDef.header);
-              return (
-                <li key={column.id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={column.getIsVisible()}
-                      onChange={column.getToggleVisibilityHandler()}
-                    />
-                    {column.id}
-                  </label>
-                </li>
-              );
-            })}
+            .map((column) => (
+              <li key={column.id}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={column.getIsVisible()}
+                    onChange={column.getToggleVisibilityHandler()}
+                  />
+                  {(column.columnDef.meta as string) || column.id}
+                </label>
+              </li>
+            ))}
         </ul>
       </div>
       <div className="table-wrapper">

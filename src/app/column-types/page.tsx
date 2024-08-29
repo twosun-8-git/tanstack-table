@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
@@ -9,7 +9,7 @@ import {
   Row,
 } from "@tanstack/react-table";
 
-import { columns, RowData } from "./_columns";
+import { columns } from "./_columns";
 import { rows } from "@/app/_rows";
 
 export default function Page() {
