@@ -18,6 +18,7 @@ import {
 // DnD
 import {
   DndContext,
+  PointerSensor,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
@@ -31,6 +32,7 @@ import {
   arrayMove,
   SortableContext,
   horizontalListSortingStrategy,
+  sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 
 import { columns } from "./_columns";
@@ -197,11 +199,26 @@ export default function Page() {
   };
 
   const sensors = useSensors(
-    useSensor(MouseSensor, {}),
-    useSensor(TouchSensor, {}),
-    useSensor(KeyboardSensor, {})
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(MouseSensor, {
+      activationConstraint: {
+        distance: 10,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 200,
+        tolerance: 5,
+      },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
   );
-
   return (
     <DndContext
       sensors={sensors}

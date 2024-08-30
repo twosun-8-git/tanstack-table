@@ -42,15 +42,13 @@ export function TableHeaderCell({
   const isSort = header.column.columnDef.enableSorting;
 
   return (
-    <th
-      colSpan={header.colSpan}
-      ref={setNodeRef}
-      style={css}
-      {...attributes}
-      {...listeners}
-    >
+    <th colSpan={header.colSpan} ref={setNodeRef} style={css}>
       <div className="table__header-content">
-        <div style={{ cursor: !isDraggable ? "default" : "grab" }}>
+        <div
+          {...attributes}
+          {...listeners}
+          style={{ cursor: isDraggable ? "grab" : "default" }}
+        >
           {header.isPlaceholder
             ? null
             : flexRender(header.column.columnDef.header, header.getContext())}
