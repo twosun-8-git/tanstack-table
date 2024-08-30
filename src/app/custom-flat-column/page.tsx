@@ -24,6 +24,7 @@ import {
   type DragEndEvent,
   useSensor,
   useSensors,
+  closestCenter,
 } from "@dnd-kit/core";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 import {
@@ -51,6 +52,11 @@ export default function Page() {
   /** Column Order */
   const nonDraggableColumns = ["select", "no"]; // 並び替え対象外カラムID
   const [columnOrder, setColumnOrder] = useState<string[]>(() =>
+    /**
+     * Display Column: id 必須
+     * Accessor Column: accessorKey 必須、id 任意
+     * Columnタイプの混在を考慮し id と accessorKey 両方を取得
+     */
     columns
       .map((col) => {
         if ("id" in col) return col.id as string;
@@ -174,13 +180,13 @@ export default function Page() {
       sorting,
       columnVisibility,
     },
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
+    debugTable: false,
+    debugHeaders: false,
+    debugColumns: false,
   });
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
+  const handleDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
     if (active.id !== over?.id) {
       setColumnOrder((prev) => {
         const oldIndex = prev.indexOf(active.id as string);
@@ -201,6 +207,7 @@ export default function Page() {
       sensors={sensors}
       onDragEnd={handleDragEnd}
       modifiers={[restrictToHorizontalAxis]}
+      collisionDetection={closestCenter}
     >
       <main>
         <div className="current">

@@ -11,22 +11,22 @@ type Props = {
 };
 
 export function TableBodyCell({ cell, style }: Props) {
-  const { isDragging, setNodeRef, transform } = useSortable({
+  const { isDragging, setNodeRef, transform, transition } = useSortable({
     id: cell.column.id,
   });
 
   const css: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
-    position: "relative",
     transform: CSS.Translate.toString(transform),
-    transition: "width transform 0.2s ease-in-out",
-    width: cell.column.getSize(),
+    transition,
     zIndex: isDragging ? 1 : 0,
     ...style,
   };
   return (
     <td style={css} ref={setNodeRef}>
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      <div className="table_cell-content">
+        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      </div>
     </td>
   );
 }

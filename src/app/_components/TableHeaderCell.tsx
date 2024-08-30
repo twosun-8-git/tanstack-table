@@ -32,10 +32,8 @@ export function TableHeaderCell({
 
   const css: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
-    position: "relative",
     transform: CSS.Translate.toString(transform),
     transition,
-    whiteSpace: "nowrap",
     width: header.column.getSize(),
     zIndex: isDragging ? 1 : 0,
     ...style,
