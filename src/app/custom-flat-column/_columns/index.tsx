@@ -29,6 +29,7 @@ export const columns = [
     ),
     enableHiding: false,
     enableSorting: false,
+    enableResizing: false,
     size: 80,
   }),
   columnHelper.accessor("no", {
@@ -36,7 +37,10 @@ export const columns = [
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id.toUpperCase(),
     enableHiding: false,
-    size: 80,
+    enableResizing: false,
+    size: 50,
+    minSize: 30,
+    maxSize: 100,
   }),
   columnHelper.display({
     id: "fullName",

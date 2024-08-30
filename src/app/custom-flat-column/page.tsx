@@ -4,12 +4,14 @@ import { useEffect, useState } from "react";
 import {
   Column,
   Row,
-  getCoreRowModel,
   useReactTable,
+  getCoreRowModel,
   getSortedRowModel,
   getFilteredRowModel,
+  ColumnResizeMode,
   ColumnFiltersState,
   ColumnPinningState,
+  ColumnSizingState,
   RowSelectionState,
   SortingState,
   VisibilityState,
@@ -102,6 +104,21 @@ export default function Page() {
     console.groupEnd();
   }, [columnPinning]);
 
+  /** Column Resize */
+  const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
+  const [columnResizeMode, setColumnResizeMode] =
+    useState<ColumnResizeMode>("onChange");
+
+  // 確認用: Resize
+  useEffect(() => {
+    console.group("🟤 columnSizing");
+    console.log(columnSizing);
+    console.groupEnd();
+    console.group("🟤 columnResizeMode");
+    console.log(columnResizeMode);
+    console.groupEnd();
+  }, [columnSizing, columnResizeMode]);
+
   /** Row Selection */
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
@@ -132,7 +149,8 @@ export default function Page() {
     const sortDirection = column.getIsSorted();
     return sortDirection === "asc" ? "⬆" : "⬇";
   };
-  // 確認用: sorting
+
+  // 確認用: Sort
   useEffect(() => {
     console.group("🔴 sorting");
     console.log(sorting);
@@ -160,6 +178,11 @@ export default function Page() {
     // Column Order
     onColumnOrderChange: setColumnOrder,
 
+    // Column Resize
+    enableColumnResizing: true,
+    columnResizeMode,
+    onColumnSizingChange: setColumnSizing,
+
     // Row Selection
     enableMultiRowSelection: true, // Rowの複数選択 (defalut: true)
     // enableRowSelection: (row) => row.original.age >= 18, // Rowの選択条件 (defalut: true)
@@ -178,9 +201,10 @@ export default function Page() {
       columnFilters,
       columnPinning,
       columnOrder,
+      columnSizing,
+      columnVisibility,
       rowSelection,
       sorting,
-      columnVisibility,
     },
     debugTable: false,
     debugHeaders: false,
@@ -231,13 +255,21 @@ export default function Page() {
           <span>custom</span>
         </div>
         <div className="container is-flex">
-          <ColumnController table={table} />
+          <ColumnController
+            table={table}
+            columnResizeMode={columnResizeMode}
+            changeColumnResizeMode={setColumnResizeMode}
+          />
+
           <div className="table-wrapper small">
             <SortableContext
               items={columnOrder}
               strategy={horizontalListSortingStrategy}
             >
-              <table className="table">
+              <table
+                className="table"
+                style={{ width: table.getCenterTotalSize() }}
+              >
                 <thead>
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>

@@ -239,7 +239,6 @@ header p {
 }
 .table {
   font-size: 14px;
-  width: 100%;
   border-collapse: collapse;
 }
 .table th,
@@ -257,10 +256,17 @@ header p {
 .table thead tr + tr {
   border-top: var(--border);
 }
-.table thead th:not(:first-of-type) {
-  border-left: 1px solid rgb(255, 255, 255, 0.5);
+.table thead th:not(:last-of-type)::after {
+  display: block;
+  content: "";
+  width: 1px;
+  height: 100%;
+  background: #fff;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
-.table__header-content {
+.table__header-cell-inner {
   display: flex;
   align-items: center;
 }
@@ -319,4 +325,30 @@ header p {
   font-size: 12px;
   padding-block: 8px;
   color: #aaa;
+}
+.resizer {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: rgb(250, 97, 108);
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+  transition: opacity 0.2s, background 0.2s;
+}
+.resizer.isResizing {
+  background: rgb(255, 185, 56);
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .resizer {
+    opacity: 0;
+  }
+
+  th:hover > .resizer {
+    opacity: 1;
+  }
 }

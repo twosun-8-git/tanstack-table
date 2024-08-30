@@ -30,7 +30,7 @@ export function TableHeaderCell({
     disabled: !isDraggable,
   });
 
-  const css: CSSProperties = {
+  const thStyle: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
     transform: CSS.Translate.toString(transform),
     transition,
@@ -39,15 +39,21 @@ export function TableHeaderCell({
     ...style,
   };
 
+  const contentStyle: CSSProperties = {
+    cursor: isDraggable ? "grab" : "default",
+  };
+
   const isSort = header.column.columnDef.enableSorting;
 
+  /** クリックイベントの干渉を避けるため「DnDでのカラムの並び替え」と「ソート機能」のDOMは分ける */
   return (
-    <th colSpan={header.colSpan} ref={setNodeRef} style={css}>
-      <div className="table__header-content">
+    <th colSpan={header.colSpan} ref={setNodeRef} style={thStyle}>
+      <div className="table__header-cell-inner">
         <div
           {...attributes}
           {...listeners}
-          style={{ cursor: isDraggable ? "grab" : "default" }}
+          className="table__header-cell-content"
+          style={contentStyle}
         >
           {header.isPlaceholder
             ? null
@@ -65,6 +71,20 @@ export function TableHeaderCell({
           )}
         </div>
       </div>
+      {header.column.getCanResize() && (
+        <div
+          onDoubleClick={() => header.column.resetSize()}
+          onMouseDown={header.getResizeHandler()}
+          onTouchStart={header.getResizeHandler()}
+          className={`resizer ${
+            header.column.getIsResizing() ? "isResizing" : ""
+          }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+        />
+      )}
     </th>
   );
 }

@@ -12,15 +12,20 @@ export function ColumnFilter({ table }: Props) {
     return column.getFilterValue() as string;
   };
 
-  const hanldeChangeColumnFilter = (columnId: string, value: string) => {
+  const hanldeChangeColumnFilter = (
+    e: React.ChangeEvent<HTMLSelectElement>,
+    columnId: string
+    // value?: string,
+  ) => {
+    const _value = e.target.value;
     const _column = table.getColumn(columnId);
     if (_column) {
-      if (!value) {
+      if (!_value) {
         _column.setFilterValue(undefined);
-      } else if (!isNaN(Number(value))) {
-        _column.setFilterValue(Number(value));
+      } else if (!isNaN(Number(_value))) {
+        _column.setFilterValue(Number(_value));
       } else {
-        _column.setFilterValue(value);
+        _column.setFilterValue(_value);
       }
     }
   };
@@ -33,9 +38,7 @@ export function ColumnFilter({ table }: Props) {
             <span>性別</span>
             <select
               value={getColumnFilterValue("gender")}
-              onChange={(e) =>
-                hanldeChangeColumnFilter("gender", e.target.value)
-              }
+              onChange={(e) => hanldeChangeColumnFilter(e, "gender")}
             >
               <option value="">全て</option>
               <option value="男子">男子</option>
@@ -48,9 +51,7 @@ export function ColumnFilter({ table }: Props) {
             <span>学年</span>
             <select
               value={getColumnFilterValue("grade")}
-              onChange={(e) =>
-                hanldeChangeColumnFilter("grade", e.target.value)
-              }
+              onChange={(e) => hanldeChangeColumnFilter(e, "grade")}
             >
               <option value="">全て</option>
               {[1, 2, 3, 4, 5, 6].map((grade) => (
@@ -66,9 +67,7 @@ export function ColumnFilter({ table }: Props) {
             <span>クラス</span>
             <select
               value={getColumnFilterValue("class")}
-              onChange={(e) =>
-                hanldeChangeColumnFilter("class", e.target.value)
-              }
+              onChange={(e) => hanldeChangeColumnFilter(e, "class")}
             >
               <option value="">全て</option>
               {[1, 2, 3, 4].map((classNum) => (
@@ -84,7 +83,7 @@ export function ColumnFilter({ table }: Props) {
             <span>国語</span>
             <select
               value={getColumnFilterValue("lang")}
-              onChange={(e) => hanldeChangeColumnFilter("lang", e.target.value)}
+              onChange={(e) => hanldeChangeColumnFilter(e, "lang")}
             >
               <option value="">全て</option>
               <option value="50">50点以上</option>
@@ -99,9 +98,7 @@ export function ColumnFilter({ table }: Props) {
             <span>算数</span>
             <select
               value={getColumnFilterValue("arith")}
-              onChange={(e) =>
-                hanldeChangeColumnFilter("arith", e.target.value)
-              }
+              onChange={(e) => hanldeChangeColumnFilter(e, "arith")}
             >
               <option value="">全て</option>
               <option value="50">50点以上</option>
@@ -116,9 +113,7 @@ export function ColumnFilter({ table }: Props) {
             <span>理科</span>
             <select
               value={getColumnFilterValue("science")}
-              onChange={(e) =>
-                hanldeChangeColumnFilter("science", e.target.value)
-              }
+              onChange={(e) => hanldeChangeColumnFilter(e, "science")}
             >
               <option value="">全て</option>
               <option value="50">50点以上</option>

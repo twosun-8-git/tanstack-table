@@ -24,7 +24,7 @@ export function TableBodyCell({ cell, style }: Props) {
   };
   return (
     <td style={css} ref={setNodeRef}>
-      <div className="table_cell-content">
+      <div className="table_cell-inner">
         {flexRender(cell.column.columnDef.cell, cell.getContext())}
       </div>
     </td>
