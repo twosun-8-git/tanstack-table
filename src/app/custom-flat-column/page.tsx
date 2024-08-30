@@ -160,6 +160,13 @@ export default function Page() {
   /** Visibility */
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
+  // 確認用: Sort
+  useEffect(() => {
+    console.group("🔵 columnVisibility");
+    console.log(columnVisibility);
+    console.groupEnd();
+  }, [columnVisibility]);
+
   /** Table 作成 */
   const table = useReactTable<Student>({
     data,
@@ -257,8 +264,8 @@ export default function Page() {
         <div className="container is-flex">
           <ColumnController
             table={table}
-            columnResizeMode={columnResizeMode}
-            changeColumnResizeMode={setColumnResizeMode}
+            mode={columnResizeMode}
+            changeMode={setColumnResizeMode}
           />
 
           <div className="table-wrapper small">

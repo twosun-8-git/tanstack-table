@@ -1,14 +1,11 @@
 import { ColumnResizeMode } from "@tanstack/react-table";
 
 type Props = {
-  columnResizeMode: ColumnResizeMode;
-  changeColumnResizeMode: (mode: ColumnResizeMode) => void;
+  mode: ColumnResizeMode;
+  changeMode: (value: ColumnResizeMode) => void;
 };
 
-export function ColumnResizeAction({
-  columnResizeMode,
-  changeColumnResizeMode,
-}: Props) {
+export function ColumnResizeSetting({ mode, changeMode }: Props) {
   return (
     <div className="column-controller__inner">
       <p>カラムのリサイズモード</p>
@@ -17,10 +14,8 @@ export function ColumnResizeAction({
           <label>
             <span>モード</span>
             <select
-              value={columnResizeMode}
-              onChange={(e) =>
-                changeColumnResizeMode(e.target.value as ColumnResizeMode)
-              }
+              value={mode}
+              onChange={(e) => changeMode(e.target.value as ColumnResizeMode)}
             >
               <option value="onChange">onChange</option>
               <option value="onEnd">On End</option>

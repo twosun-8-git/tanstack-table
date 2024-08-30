@@ -3,26 +3,19 @@ import { Table, ColumnResizeMode } from "@tanstack/react-table";
 import { Student } from "@/app/_rows/type";
 import { ColumnVisibility } from "./ColumnVisibility";
 import { ColumnFilter } from "./ColumnFilter";
-import { ColumnResizeAction } from "./ColumnResizeAction";
+import { ColumnResizeSetting } from "./ColumnResizeSetting";
 
 type Props = {
   table: Table<Student>;
-  columnResizeMode: ColumnResizeMode;
-  changeColumnResizeMode: (mode: ColumnResizeMode) => void;
+  mode: ColumnResizeMode;
+  changeMode: (value: ColumnResizeMode) => void;
 };
-export function ColumnController({
-  table,
-  columnResizeMode,
-  changeColumnResizeMode,
-}: Props) {
+export function ColumnController({ table, mode, changeMode }: Props) {
   return (
     <div className="column-controller">
       <ColumnVisibility table={table} />
       <ColumnFilter table={table} />
-      <ColumnResizeAction
-        columnResizeMode={columnResizeMode}
-        changeColumnResizeMode={changeColumnResizeMode}
-      />
+      <ColumnResizeSetting mode={mode} changeMode={changeMode} />
     </div>
   );
 }
