@@ -226,7 +226,8 @@ header p {
   width: 100%;
 }
 .table-wrapper {
-  height: 100vh;
+  height: fit-content;
+  max-height: 100vh;
   border: var(--border);
   border-radius: 6px;
   overflow: scroll;
@@ -256,6 +257,29 @@ header p {
 }
 .table thead th:not(:first-of-type) {
   border-left: 1px solid rgb(255, 255, 255, 0.5);
+}
+.table__header-content {
+  display: flex;
+  align-items: center;
+}
+.table__header-option {
+  opacity: 0;
+  margin-left: 12px;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.table thead th:hover .table__header-option {
+  opacity: 1;
+  pointer-events: auto;
+}
+.table thead th .table__header-option > button {
+  display: inline-block;
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #fff;
+  cursor: pointer;
 }
 .table tbody tr.selectable {
   cursor: pointer;

@@ -19,9 +19,9 @@ export default function Home() {
       </dl>
       <dl>
         <dt>
-          <Link href="./custom">/custom</Link>
+          <Link href="./custom-flat-column">/custom-flat-column</Link>
         </dt>
-        <dd>TanStack Table の様々な機能を追加</dd>
+        <dd>TanStack Table の様々な機能を追加。カラム構造はフラット。</dd>
       </dl>
     </div>
   );

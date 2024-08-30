@@ -1,4 +1,5 @@
 export { Checkbox } from "./Checkbox";
 export { ColumnController } from "./ColumnController";
-export { DraggableTableHeader } from "./DraggableTableHeader";
-export { DragAlongCell } from "./DragAlongCell";
+export { TableHeaderCell } from "./TableHeaderCell";
+export { TableBodyCell } from "./TableBodyCell";
+export { TableFooterCell } from "./TableFooterCell";

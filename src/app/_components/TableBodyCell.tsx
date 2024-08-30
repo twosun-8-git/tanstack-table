@@ -10,7 +10,7 @@ type Props = {
   style?: CSSProperties;
 };
 
-export function DragAlongCell({ cell, style }: Props) {
+export function TableBodyCell({ cell, style }: Props) {
   const { isDragging, setNodeRef, transform } = useSortable({
     id: cell.column.id,
   });
@@ -25,7 +25,7 @@ export function DragAlongCell({ cell, style }: Props) {
     ...style,
   };
   return (
-    <td style={style} ref={setNodeRef}>
+    <td style={css} ref={setNodeRef}>
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
     </td>
   );

@@ -33,7 +33,7 @@ import {
   horizontalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-import { columns } from "./_columns";
+import { columns } from "./_columns/flat";
 import { Student } from "@/app/_rows/type";
 import { rows } from "@/app/_rows";
 import {
@@ -49,8 +49,14 @@ export default function Page() {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   /** Column Order */
-  const [columnOrder, setColumnOrder] = React.useState<string[]>(() =>
-    columns.map((c) => c.id!)
+  const [columnOrder, setColumnOrder] = useState<string[]>(() =>
+    columns
+      .map((col) => {
+        if ("id" in col) return col.id as string;
+        if ("accessorKey" in col) return col.accessorKey as string;
+        return "";
+      })
+      .filter(Boolean)
   );
 
   /** Column Pinning */
@@ -148,16 +154,17 @@ export default function Page() {
     },
   });
 
-  function handleDragEnd(event: DragEndEvent) {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    if (active && over && active.id !== over.id) {
-      setColumnOrder((columnOrder) => {
-        const oldIndex = columnOrder.indexOf(active.id as string);
-        const newIndex = columnOrder.indexOf(over.id as string);
-        return arrayMove(columnOrder, oldIndex, newIndex); //this is just a splice util
+    if (active.id !== over?.id) {
+      setColumnOrder((prev) => {
+        const oldIndex = prev.indexOf(active.id as string);
+        const newIndex = prev.indexOf(over?.id as string);
+        return arrayMove(prev, oldIndex, newIndex);
       });
     }
-  }
+  };
+
   const sensors = useSensors(
     useSensor(MouseSensor, {}),
     useSensor(TouchSensor, {}),
