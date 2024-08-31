@@ -52,6 +52,12 @@ export default function Page() {
 
   /** Column Filter */
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  // 確認用: Column Order
+  useEffect(() => {
+    console.group("🔴 columnFilters");
+    console.log(columnFilters);
+    console.groupEnd();
+  }, [columnFilters]);
 
   /** Column Order */
   const nonDraggableColumns = ["select", "no"]; // 並び替え対象外カラムID
@@ -152,7 +158,7 @@ export default function Page() {
 
   // 確認用: Sort
   useEffect(() => {
-    console.group("🔴 sorting");
+    console.group("🟠 sorting");
     console.log(sorting);
     console.groupEnd();
   }, [sorting]);
