@@ -151,11 +151,6 @@ export default function Page() {
   /** Sort */
   const [sorting, setSorting] = useState<SortingState>([]);
 
-  const sortIcon = (column: Column<Student>) => {
-    const sortDirection = column.getIsSorted();
-    return sortDirection === "asc" ? "⬆" : "⬇";
-  };
-
   // 確認用: Sort
   useEffect(() => {
     console.group("🟠 sorting");
@@ -256,6 +251,9 @@ export default function Page() {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  const isResizing = table.getState().columnSizingInfo.isResizingColumn;
+
   return (
     <DndContext
       sensors={sensors}
@@ -280,7 +278,7 @@ export default function Page() {
               strategy={horizontalListSortingStrategy}
             >
               <table
-                className="table"
+                className={`table ${isResizing && "is-resizing"}`}
                 style={{ width: table.getCenterTotalSize() }}
               >
                 <thead>
@@ -291,7 +289,6 @@ export default function Page() {
                           key={header.id}
                           header={header}
                           style={getPinnedStyles(header.column)}
-                          sortIcon={sortIcon(header.column)}
                           isDraggable={!nonDraggableColumns.includes(header.id)}
                         />
                       ))}

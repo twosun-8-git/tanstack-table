@@ -8,16 +8,10 @@ import { Student } from "@/app/_rows/type";
 type Props = {
   header: Header<Student, unknown>;
   style?: CSSProperties;
-  sortIcon?: React.ReactNode;
   isDraggable?: boolean;
 };
 
-export function TableHeaderCell({
-  header,
-  style,
-  sortIcon,
-  isDraggable = true,
-}: Props) {
+export function TableHeaderCell({ header, style, isDraggable = true }: Props) {
   const {
     attributes,
     isDragging,
@@ -43,9 +37,9 @@ export function TableHeaderCell({
     cursor: isDraggable ? "grab" : "default",
   };
 
-  const isSort = header.column.columnDef.enableSorting;
+  const isSortedColumn = header.column.getIsSorted();
 
-  /** クリックイベントの干渉を避けるため「DnDでのカラムの並び替え」と「ソート機能」のDOMは分ける */
+  /** クリックイベントの干渉を避けるため「ドラッグ&ドロップでのカラムの並び替え」と「ソート機能」のDOMは分ける */
   return (
     <th colSpan={header.colSpan} ref={setNodeRef} style={thStyle}>
       <div className="table__header-cell-inner">
@@ -60,13 +54,13 @@ export function TableHeaderCell({
             : flexRender(header.column.columnDef.header, header.getContext())}
         </div>
         <div className="table__header-option">
-          {isSort !== false && (
+          {header.column.getCanSort() && (
             <button
               type="button"
-              className="sort"
+              className={`sort ${isSortedColumn ? "is-active" : ""}`}
               onClick={header.column.getToggleSortingHandler()}
             >
-              {sortIcon}
+              {header.column.getIsSorted() === "asc" ? "⬆" : "⬇"}
             </button>
           )}
         </div>
@@ -77,7 +71,7 @@ export function TableHeaderCell({
           onMouseDown={header.getResizeHandler()}
           onTouchStart={header.getResizeHandler()}
           className={`resizer ${
-            header.column.getIsResizing() ? "isResizing" : ""
+            header.column.getIsResizing() && "is-resizing"
           }`}
           onClick={(e) => {
             e.stopPropagation();

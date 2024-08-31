@@ -271,14 +271,7 @@ header p {
   align-items: center;
 }
 .table__header-option {
-  opacity: 0;
   margin-left: 12px;
-  pointer-events: none;
-  transition: opacity 0.2s;
-}
-.table thead th:hover .table__header-option {
-  opacity: 1;
-  pointer-events: auto;
 }
 .table thead th .table__header-option > button {
   display: inline-block;
@@ -288,6 +281,15 @@ header p {
   padding: 0;
   color: #fff;
   cursor: pointer;
+  opacity: 0;
+  margin-left: 12px;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.table thead th .table__header-option > button.is-active,
+.table:not(.table.is-resizing) thead th:hover .table__header-option > button {
+  opacity: 1;
+  pointer-events: auto;
 }
 .table tbody tr.selectable {
   cursor: pointer;
@@ -332,14 +334,14 @@ header p {
   top: 0;
   height: 100%;
   width: 4px;
-  background: rgb(250, 97, 108);
+  background: rgb(255, 185, 56);
   cursor: col-resize;
   user-select: none;
   touch-action: none;
   transition: opacity 0.2s, background 0.2s;
 }
-.resizer.isResizing {
-  background: rgb(255, 185, 56);
+.resizer.is-resizing {
+  background: rgb(250, 97, 108);
   opacity: 1;
 }
 
@@ -348,6 +350,12 @@ header p {
     opacity: 0;
   }
 
+  th:has(.is-resizing) th:hover > .resizer {
+    opacity: 1;
+  }
+  th:has(.is-resizing) + th:hover > .resizer {
+    opacity: 0;
+  }
   th:hover > .resizer {
     opacity: 1;
   }
