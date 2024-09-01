@@ -245,13 +245,13 @@ header p {
 .grid__header .grid__row {
   position: sticky;
   top: 0;
-  z-index: 1;
+  z-index: 2;
 }
 .grid__row {
   display: grid;
   grid-auto-flow: column;
 }
-.grid__row.selected {
+.grid__row.selected .grid__cell {
   background: #eef6f5;
 }
 .grid__row.no-selectable {
@@ -266,6 +266,7 @@ header p {
 .grid__cell {
   padding: 8px;
   overflow: hidden;
+  background: #fff;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding: 14px;

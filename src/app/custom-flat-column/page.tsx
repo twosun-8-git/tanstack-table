@@ -85,7 +85,7 @@ export default function Page() {
 
   /** Column Pinning */
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
-    left: [], // カラムIDを指定
+    // left: ["select", "no", "gender"], // カラムIDを指定
     right: [],
   });
 
