@@ -21,59 +21,63 @@ export default function Page() {
 
   return (
     <main>
-      <div className="current">
-        <span>basic</span>
-      </div>
-      <div className="container">
-        <div className="table-wrapper">
-          <table className="table">
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
-                    <th key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id}>
+      <div className="grid">
+        <div className="grid__header">
+          {table.getHeaderGroups().map((headerGroup) => (
+            <div key={headerGroup.id} className="grid__row">
+              {headerGroup.headers.map((header) => (
+                <div
+                  key={header.id}
+                  className="grid__cell"
+                  style={{ width: header.getSize() }}
+                >
+                  {header.isPlaceholder ? null : (
+                    <div>
                       {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
+                        header.column.columnDef.header,
+                        header.getContext()
                       )}
-                    </td>
-                  ))}
-                </tr>
+                    </div>
+                  )}
+                </div>
               ))}
-            </tbody>
-            <tfoot>
-              {table.getFooterGroups().map((footerGroup) => (
-                <tr key={footerGroup.id}>
-                  {footerGroup.headers.map((header) => (
-                    <td key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.footer,
-                            header.getContext()
-                          )}
-                    </td>
-                  ))}
-                </tr>
+            </div>
+          ))}
+        </div>
+        <div className="grid__body">
+          {table.getRowModel().rows.map((row) => (
+            <div key={row.id} className="grid__row">
+              {row.getVisibleCells().map((cell) => (
+                <div
+                  key={cell.id}
+                  className="grid__cell"
+                  style={{ width: cell.column.getSize() }}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </div>
               ))}
-            </tfoot>
-          </table>
+            </div>
+          ))}
+        </div>
+        <div className="grid__footer">
+          {table.getFooterGroups().map((footerGroup) => (
+            <div key={footerGroup.id} className="grid__row">
+              {footerGroup.headers.map((header) => (
+                <div
+                  key={header.id}
+                  className="grid__cell"
+                  style={{ width: header.column.getSize() }}
+                >
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(
+                        header.column.columnDef.footer,
+                        header.getContext()
+                      )}
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </main>

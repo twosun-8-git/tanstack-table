@@ -30,7 +30,6 @@ export const columns = [
     enableHiding: false,
     enableSorting: false,
     enableResizing: false,
-    size: 80,
   }),
   columnHelper.accessor("no", {
     header: "No",
@@ -38,9 +37,6 @@ export const columns = [
     footer: (info) => info.column.id.toUpperCase(),
     enableHiding: false,
     enableResizing: false,
-    size: 50,
-    minSize: 30,
-    maxSize: 100,
   }),
   columnHelper.display({
     id: "fullName",
@@ -51,7 +47,6 @@ export const columns = [
       return `${lastName} ${firstName}`;
     },
     enableSorting: false,
-    size: 240,
   }),
   columnHelper.accessor("gender", {
     header: "Gender",
@@ -64,7 +59,6 @@ export const columns = [
     footer: "性別",
     filterFn: "equals",
     enableSorting: false,
-    size: 120,
   }),
   columnHelper.accessor("grade", {
     header: "Grade",
@@ -72,7 +66,6 @@ export const columns = [
     cell: (info) => `${info.getValue()} 年`,
     footer: "学年",
     filterFn: "equals",
-    size: 100,
   }),
   columnHelper.accessor("class", {
     header: "Class",
@@ -80,7 +73,6 @@ export const columns = [
     cell: (info) => `${info.getValue()} 組`,
     footer: "組",
     filterFn: "equals",
-    size: 100,
   }),
   columnHelper.accessor("lang", {
     header: "Language",
@@ -88,7 +80,6 @@ export const columns = [
     cell: (info) => `${info.getValue()} 点`,
     footer: "国語",
     filterFn: gteFilter,
-    size: 140,
   }),
   columnHelper.accessor("arith", {
     header: "Arithmetic",
@@ -96,7 +87,6 @@ export const columns = [
     cell: (info) => `${info.getValue()} 点`,
     footer: "算数",
     filterFn: gteFilter,
-    size: 140,
   }),
   columnHelper.accessor("science", {
     header: "Science",
@@ -104,7 +94,6 @@ export const columns = [
     cell: (info) => `${info.getValue()} 点`,
     footer: "理科",
     filterFn: gteFilter,
-    size: 140,
   }),
   columnHelper.display({
     id: "total",
@@ -116,7 +105,6 @@ export const columns = [
       return <b>{_sum} 点</b>;
     },
     footer: "合計",
-    size: 140,
   }),
   columnHelper.display({
     id: "average",
@@ -128,6 +116,5 @@ export const columns = [
       return <i>{_average} 点</i>;
     },
     footer: "平均",
-    size: 140,
   }),
 ];

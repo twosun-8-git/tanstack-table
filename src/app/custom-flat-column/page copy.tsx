@@ -14,7 +14,6 @@ import {
   ColumnSizingState,
   RowSelectionState,
   SortingState,
-  flexRender,
   VisibilityState,
 } from "@tanstack/react-table";
 
@@ -253,6 +252,10 @@ export default function Page() {
     })
   );
 
+  /** カラムのリサイズ機能が有効化  */
+  const isColumnResizeEnabled = table.options.enableColumnResizing;
+
+  /** カラムリサイズ中 */
   const isResizing = table.getState().columnSizingInfo.isResizingColumn;
 
   return (
@@ -278,82 +281,55 @@ export default function Page() {
               items={columnOrder}
               strategy={horizontalListSortingStrategy}
             >
-              <div
-                className={`table-container ${isResizing && "is-resizing"}`}
+              <table
+                className={`table ${isResizing && "is-resizing"} ${
+                  isColumnResizeEnabled && "layout-fix"
+                }`}
                 style={{ width: table.getCenterTotalSize() }}
               >
-                <div className="grid-table">
-                  <div className="grid-header-group">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <div key={headerGroup.id} className="grid-header-row">
-                        {headerGroup.headers.map((header) => (
-                          <div
-                            key={header.id}
-                            className="grid-header-cell"
-                            style={{ width: header.getSize() }}
-                          >
-                            {header.isPlaceholder ? null : (
-                              <div
-                                className={
-                                  header.column.getCanSort() ? "sortable" : ""
-                                }
-                                onClick={header.column.getToggleSortingHandler()}
-                              >
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                                <span className="sort-indicator">
-                                  {{
-                                    asc: " 🔼",
-                                    desc: " 🔽",
-                                  }[header.column.getIsSorted() as string] ??
-                                    null}
-                                </span>
-                              </div>
-                            )}
-                            {header.column.getCanResize() && (
-                              <div
-                                onMouseDown={header.getResizeHandler()}
-                                onTouchStart={header.getResizeHandler()}
-                                className="resizer"
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-                  <div className="grid-body">
-                    {table.getRowModel().rows.map((row) => (
-                      <div key={row.id} className="grid-row">
-                        {row.getVisibleCells().map((cell) => (
-                          <div
-                            key={cell.id}
-                            className="grid-cell"
-                            style={{ width: cell.column.getSize() }}
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* <tfoot>
-                    {table.getFooterGroups().map((footerGroup) => (
-                      <tr key={footerGroup.id}>
-                        {footerGroup.headers.map((header) => (
-                          <TableFooterCell key={header.id} header={header} />
-                        ))}
-                      </tr>
-                    ))}
-                  </tfoot> */}
-                </div>
-              </div>
+                <thead>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <TableHeaderCell
+                          key={header.id}
+                          header={header}
+                          style={getPinnedStyles(header.column)}
+                          isDraggable={!nonDraggableColumns.includes(header.id)}
+                        />
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <tr
+                      key={row.id}
+                      className={`${
+                        row.getCanSelect() ? "selectable" : "no-selectable"
+                      } ${rowSelection[row.index] ? "selected" : ""}`}
+                      onClick={() => handleRowClick(row)}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <TableBodyCell
+                          key={cell.id}
+                          cell={cell}
+                          style={getPinnedStyles(cell.column)}
+                        />
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+                <tfoot>
+                  {table.getFooterGroups().map((footerGroup) => (
+                    <tr key={footerGroup.id}>
+                      {footerGroup.headers.map((header) => (
+                        <TableFooterCell key={header.id} header={header} />
+                      ))}
+                    </tr>
+                  ))}
+                </tfoot>
+              </table>
             </SortableContext>
           </div>
         </div>
