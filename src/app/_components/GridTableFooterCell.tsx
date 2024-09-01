@@ -1,21 +1,29 @@
-import React from "react";
+import { CSSProperties } from "react";
 import { Header, flexRender } from "@tanstack/react-table";
-import { Student } from "@/app/_rows/type";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
-type Props = {
-  header: Header<Student, unknown>;
-  style?: React.CSSProperties;
+type Props<T> = {
+  header: Header<T, unknown>;
+  style?: CSSProperties;
 };
 
-export function GridTableFooterCell({ header, style }: Props) {
+export function GridTableFooterCell<T>({ header, style }: Props<T>) {
+  const { isDragging, setNodeRef, transform, transition } = useSortable({
+    id: header.column.id,
+  });
+
+  const dragAlongStyle: CSSProperties = {
+    opacity: isDragging ? 0.8 : 1,
+    transform: CSS.Translate.toString(transform),
+    transition,
+    zIndex: isDragging ? 1 : 0,
+    width: header.getSize(),
+    ...style,
+  };
+
   return (
-    <div
-      className="grid-table__footer-cell"
-      style={{
-        ...style,
-        gridColumn: `span ${header.colSpan}`,
-      }}
-    >
+    <div className="grid__cell" ref={setNodeRef} style={dragAlongStyle}>
       {header.isPlaceholder
         ? null
         : flexRender(header.column.columnDef.footer, header.getContext())}

@@ -24,6 +24,9 @@ export default function Page() {
 
   return (
     <main>
+      <div className="current">
+        <span>column type</span>
+      </div>
       <div className="grid">
         <div className="grid__header">
           {table.getHeaderGroups().map((headerGroup) => (

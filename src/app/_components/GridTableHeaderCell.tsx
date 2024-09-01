@@ -3,19 +3,17 @@ import { Header, flexRender } from "@tanstack/react-table";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { Student } from "@/app/_rows/type";
-
-type Props = {
-  header: Header<Student, unknown>;
+type Props<T> = {
+  header: Header<T, unknown>;
   style?: CSSProperties;
   isDraggable?: boolean;
 };
 
-export function GridTableHeaderCell({
+export function GridTableHeaderCell<T>({
   header,
   style,
   isDraggable = true,
-}: Props) {
+}: Props<T>) {
   const {
     attributes,
     isDragging,
@@ -28,11 +26,11 @@ export function GridTableHeaderCell({
     disabled: !isDraggable,
   });
 
-  const cellStyle: CSSProperties = {
+  const draggableStyle: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
     transform: CSS.Translate.toString(transform),
     transition,
-    width: header.column.getSize(),
+    width: header.getSize(),
     zIndex: isDragging ? 1 : 0,
     ...style,
   };
@@ -44,26 +42,26 @@ export function GridTableHeaderCell({
   const isSortedColumn = header.column.getIsSorted();
 
   return (
-    <div ref={setNodeRef} style={cellStyle} className="grid-table__header-cell">
-      <div className="grid-table__header-cell-inner">
+    <div className="grid__cell" ref={setNodeRef} style={draggableStyle}>
+      <div className="grid__cell-inner">
         <div
           {...attributes}
           {...listeners}
-          className="grid-table__header-cell-content"
+          className="grid__cell-content"
           style={contentStyle}
         >
           {header.isPlaceholder
             ? null
             : flexRender(header.column.columnDef.header, header.getContext())}
         </div>
-        <div className="grid-table__header-option">
+        <div className="grid__cell-option">
           {header.column.getCanSort() && (
             <button
               type="button"
               className={`sort ${isSortedColumn ? "is-active" : ""}`}
               onClick={header.column.getToggleSortingHandler()}
             >
-              {isSortedColumn === "asc" ? "⬆" : "⬇"}
+              {header.column.getIsSorted() === "asc" ? "⬆" : "⬇"}
             </button>
           )}
         </div>
@@ -81,7 +79,7 @@ export function GridTableHeaderCell({
             e.preventDefault();
           }}
         />
-      )}
+      )}{" "}
     </div>
   );
 }

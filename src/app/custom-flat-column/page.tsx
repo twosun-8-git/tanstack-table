@@ -14,7 +14,6 @@ import {
   ColumnSizingState,
   RowSelectionState,
   SortingState,
-  flexRender,
   VisibilityState,
 } from "@tanstack/react-table";
 
@@ -43,9 +42,9 @@ import { Student } from "@/app/_rows/type";
 import { rows } from "@/app/_rows";
 import {
   ColumnController,
-  TableHeaderCell,
-  TableBodyCell,
-  TableFooterCell,
+  GridTableHeaderCell,
+  GridTableBodyCell,
+  GridTableFooterCell,
 } from "@/app/_components";
 
 export default function Page() {
@@ -90,7 +89,7 @@ export default function Page() {
     right: [],
   });
 
-  const getPinnedStyles = (column: Column<Student, unknown>) => {
+  function getPinnedStyles<T>(column: Column<T, unknown>) {
     if (!column.getIsPinned()) {
       return {};
     }
@@ -102,7 +101,7 @@ export default function Page() {
         column.getIsPinned() === "right" ? `${column.getAfter()}px` : "auto",
       zIndex: 1,
     };
-  };
+  }
 
   // 確認用: Column Pinning
   useEffect(() => {
@@ -129,7 +128,7 @@ export default function Page() {
   /** Row Selection */
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  const handleRowClick = (row: Row<Student>, isCheck: boolean = true) => {
+  function handleRowClick<T>(row: Row<T>, isCheck: boolean = true) {
     // enableRowSelectionの条件にマッチしていない場合は何もしない
     if (!row.getCanSelect()) return;
 
@@ -140,7 +139,7 @@ export default function Page() {
         [row.id]: !prev[row.id],
       }));
     }
-  };
+  }
 
   // 確認用: RowSelection
   useEffect(() => {
@@ -194,7 +193,7 @@ export default function Page() {
 
     // Row Selection
     enableMultiRowSelection: true, // Rowの複数選択 (defalut: true)
-    // enableRowSelection: (row) => row.original.age >= 18, // Rowの選択条件 (defalut: true)
+    // enableRowSelection: (row) => row.original.science >= 80, // Rowの選択条件 (defalut: true)
     onRowSelectionChange: setRowSelection, // Row 選択時（row index: boolean）
 
     // Sort
@@ -239,7 +238,7 @@ export default function Page() {
     }),
     useSensor(MouseSensor, {
       activationConstraint: {
-        distance: 10,
+        distance: 8,
       },
     }),
     useSensor(TouchSensor, {
@@ -266,96 +265,61 @@ export default function Page() {
         <div className="current">
           <span>custom</span>
         </div>
-        <div className="container is-flex">
+        <div className="container">
           <ColumnController
             table={table}
             mode={columnResizeMode}
             changeMode={setColumnResizeMode}
           />
-
-          <div className="table-wrapper small">
-            <SortableContext
-              items={columnOrder}
-              strategy={horizontalListSortingStrategy}
-            >
-              <div
-                className={`table-container ${isResizing && "is-resizing"}`}
-                style={{ width: table.getCenterTotalSize() }}
-              >
-                <div className="grid-table">
-                  <div className="grid-header-group">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <div key={headerGroup.id} className="grid-header-row">
-                        {headerGroup.headers.map((header) => (
-                          <div
-                            key={header.id}
-                            className="grid-header-cell"
-                            style={{ width: header.getSize() }}
-                          >
-                            {header.isPlaceholder ? null : (
-                              <div
-                                className={
-                                  header.column.getCanSort() ? "sortable" : ""
-                                }
-                                onClick={header.column.getToggleSortingHandler()}
-                              >
-                                {flexRender(
-                                  header.column.columnDef.header,
-                                  header.getContext()
-                                )}
-                                <span className="sort-indicator">
-                                  {{
-                                    asc: " 🔼",
-                                    desc: " 🔽",
-                                  }[header.column.getIsSorted() as string] ??
-                                    null}
-                                </span>
-                              </div>
-                            )}
-                            {header.column.getCanResize() && (
-                              <div
-                                onMouseDown={header.getResizeHandler()}
-                                onTouchStart={header.getResizeHandler()}
-                                className="resizer"
-                              />
-                            )}
-                          </div>
-                        ))}
-                      </div>
+          <SortableContext
+            items={columnOrder}
+            strategy={horizontalListSortingStrategy}
+          >
+            <div className={`grid ${isResizing ? "is-resizing" : ""}`}>
+              <div className="grid__header">
+                {table.getHeaderGroups().map((headerGroup) => (
+                  <div key={headerGroup.id} className="grid__row">
+                    {headerGroup.headers.map((header) => (
+                      <GridTableHeaderCell
+                        key={header.id}
+                        header={header}
+                        style={getPinnedStyles(header.column)}
+                        isDraggable={!nonDraggableColumns.includes(header.id)}
+                      />
                     ))}
                   </div>
-                  <div className="grid-body">
-                    {table.getRowModel().rows.map((row) => (
-                      <div key={row.id} className="grid-row">
-                        {row.getVisibleCells().map((cell) => (
-                          <div
-                            key={cell.id}
-                            className="grid-cell"
-                            style={{ width: cell.column.getSize() }}
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext()
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* <tfoot>
-                    {table.getFooterGroups().map((footerGroup) => (
-                      <tr key={footerGroup.id}>
-                        {footerGroup.headers.map((header) => (
-                          <TableFooterCell key={header.id} header={header} />
-                        ))}
-                      </tr>
-                    ))}
-                  </tfoot> */}
-                </div>
+                ))}
               </div>
-            </SortableContext>
-          </div>
+              <div className="grid__body">
+                {table.getRowModel().rows.map((row) => (
+                  <div
+                    key={row.id}
+                    className={`grid__row ${
+                      row.getCanSelect() ? "selectable" : "no-selectable"
+                    } ${rowSelection[row.index] ? "selected" : ""}`}
+                    onClick={() => handleRowClick(row)}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <GridTableBodyCell
+                        key={cell.id}
+                        cell={cell}
+                        style={getPinnedStyles(cell.column)}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
+              <div className="grid__footer">
+                {table.getFooterGroups().map((footerGroup) => (
+                  <div key={footerGroup.id} className="grid__row">
+                    {footerGroup.headers.map((header) => (
+                      <GridTableFooterCell key={header.id} header={header} />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </SortableContext>
         </div>
       </main>
     </DndContext>

@@ -41,6 +41,7 @@ export const columns = [
   columnHelper.display({
     id: "fullName",
     meta: "名前",
+    footer: "名前",
     header: () => <b>Full Name</b>,
     cell: (info) => {
       const { firstName, lastName } = info.row.original;

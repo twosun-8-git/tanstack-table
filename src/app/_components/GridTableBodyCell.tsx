@@ -3,31 +3,33 @@ import { Cell, flexRender } from "@tanstack/react-table";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import { Student } from "@/app/_rows/type";
-
-type Props = {
-  cell: Cell<Student, unknown>;
+type Props<T> = {
+  cell: Cell<T, unknown>;
   style?: CSSProperties;
 };
 
-export function GridTableBodyCell({ cell, style }: Props) {
+export function GridTableBodyCell<T>({ cell, style }: Props<T>) {
   const { isDragging, setNodeRef, transform, transition } = useSortable({
     id: cell.column.id,
   });
 
-  const cellStyle: CSSProperties = {
+  const dragAlongStyle: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
     transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? 1 : 0,
+    width: cell.column.getSize(),
     ...style,
   };
 
   return (
-    <div style={cellStyle} ref={setNodeRef} className="grid-table__body-cell">
-      <div className="grid-table__cell-inner">
-        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-      </div>
+    <div
+      key={cell.id}
+      ref={setNodeRef}
+      className="grid__cell"
+      style={dragAlongStyle}
+    >
+      {flexRender(cell.column.columnDef.cell, cell.getContext())}
     </div>
   );
 }
