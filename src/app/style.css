@@ -302,9 +302,6 @@ header p {
   display: flex;
   align-items: center;
 }
-.grid__cell-option {
-  margin-left: 12px;
-}
 .grid__header .grid__cell button {
   display: inline-block;
   appearance: none;

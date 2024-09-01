@@ -42,7 +42,12 @@ export function GridTableHeaderCell<T>({
   const isSortedColumn = header.column.getIsSorted();
 
   return (
-    <div className="grid__cell" ref={setNodeRef} style={draggableStyle}>
+    <div
+      id={header.column.id}
+      className="grid__cell"
+      ref={setNodeRef}
+      style={draggableStyle}
+    >
       <div className="grid__cell-inner">
         <div
           {...attributes}
@@ -55,6 +60,7 @@ export function GridTableHeaderCell<T>({
             : flexRender(header.column.columnDef.header, header.getContext())}
         </div>
         <div className="grid__cell-option">
+          {/** Accessor Column以外は getCanSort() = false になる */}
           {header.column.getCanSort() && (
             <button
               type="button"
