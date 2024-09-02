@@ -12,6 +12,44 @@ const gteFilter: FilterFn<Student> = (row, columnId, filterValue) => {
 
 export const columns = [
   columnHelper.display({
+    id: "pin",
+    header: "Pin",
+    cell: ({ row }) =>
+      row.getIsPinned() ? (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            row.pin(false);
+          }}
+        >
+          ✖
+        </button>
+      ) : (
+        <div>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              row.pin("top");
+            }}
+          >
+            ⬆️
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              row.pin("bottom");
+            }}
+          >
+            ⬇️
+          </button>
+        </div>
+      ),
+    enableHiding: false,
+    enableSorting: false,
+    enableResizing: false,
+    size: 80,
+  }),
+  columnHelper.display({
     id: "select",
     header: ({ table }) => (
       <Checkbox

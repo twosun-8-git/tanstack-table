@@ -2,6 +2,7 @@
 
 import { useEffect, useState, CSSProperties } from "react";
 import {
+  Table,
   Column,
   Row,
   useReactTable,
@@ -12,6 +13,7 @@ import {
   ColumnFiltersState,
   ColumnPinningState,
   ColumnSizingState,
+  RowPinningState,
   RowSelectionState,
   SortingState,
   VisibilityState,
@@ -89,11 +91,13 @@ export default function Page() {
     right: [],
   });
 
-  function getCommonPinningStyle<T>(
+  function getColumnPinningStyle<T>(
     column: Column<T>,
     bgColor: string = "var(--secondaryColor)"
   ): CSSProperties {
-    const isPinned = column.getIsPinned();
+    const isColumnPinned = column.getIsPinned();
+
+    if (!isColumnPinned) return {};
 
     /** 左から1, 2番目などでCSSを分けたい場合は下記を利用 */
     // const isFirstLeftPinnedColumn =
@@ -106,13 +110,17 @@ export default function Page() {
     //   isPinned === "right" && column.getIsLastColumn("right");
 
     return {
-      ...(isPinned ? { backgroundColor: bgColor } : {}),
-      left: isPinned === "left" ? `${column.getStart("left")}px` : undefined,
-      right: isPinned === "right" ? `${column.getAfter("right")}px` : undefined,
-      position: isPinned ? "sticky" : "relative",
-      opacity: isPinned ? 0.92 : 1,
+      ...(isColumnPinned ? { backgroundColor: bgColor } : {}),
+      left:
+        isColumnPinned === "left" ? `${column.getStart("left")}px` : undefined,
+      right:
+        isColumnPinned === "right"
+          ? `${column.getAfter("right")}px`
+          : undefined,
+      position: isColumnPinned ? "sticky" : "relative",
+      opacity: isColumnPinned ? 0.92 : 1,
       width: column.getSize(),
-      zIndex: isPinned ? 1 : 0,
+      zIndex: isColumnPinned ? 1 : 0,
     };
   }
 
@@ -138,20 +146,71 @@ export default function Page() {
     console.groupEnd();
   }, [columnSizing, columnResizeMode]);
 
+  /** Column Visibility */
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  // 確認用: Sort
+  useEffect(() => {
+    console.group("🔵 columnVisibility");
+    console.log(columnVisibility);
+    console.groupEnd();
+  }, [columnVisibility]);
+
+  /** Row Pinning */
+  const [rowPinning, setRowPinning] = useState<RowPinningState>({
+    top: [],
+    bottom: [],
+  });
+
+  function getRowPinningStyle<T>(
+    row: Row<T>,
+    table: Table<T>,
+    bgColor: string = "var(--secondaryColor)"
+  ): CSSProperties {
+    const isRowPinned = row.getIsPinned();
+
+    if (!isRowPinned) return {};
+
+    const baseStyle: CSSProperties = {
+      position: "sticky",
+      backgroundColor: bgColor,
+      zIndex: 1,
+    };
+
+    if (isRowPinned === "top") {
+      baseStyle.top = `${row.getPinnedIndex() * 26 + 48}px`;
+    } else if (isRowPinned === "bottom") {
+      baseStyle.bottom = `${
+        (table.getBottomRows().length - 1 - row.getPinnedIndex()) * 26
+      }px`;
+    }
+
+    return baseStyle;
+  }
   /** Row Selection */
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [rowSelected, setRowSelected] = useState<RowSelectionState>({});
 
   function handleRowClick<T>(row: Row<T>, isCheck: boolean = true) {
-    // enableRowSelectionの条件にマッチしていない場合は何もしない
+    // enableRowSelection の条件にマッチしていない場合は何もしない
     if (!row.getCanSelect()) return;
 
-    // RowクリックでCheckboxもToggle連動するかを制御
+    // Row クリックで Checkbox も連動するかを制御
     if (isCheck) {
       setRowSelection((prev) => ({
         ...prev,
         [row.id]: !prev[row.id],
       }));
     }
+
+    // クリックした Row index をrowSelectedに格納(UI)
+    setRowSelected((prev) => ({
+      ...prev,
+      [row.id]: !prev[row.id],
+    }));
+
+    // 選択した Row データ
+    console.log(row.index);
   }
 
   // 確認用: RowSelection
@@ -170,16 +229,6 @@ export default function Page() {
     console.log(sorting);
     console.groupEnd();
   }, [sorting]);
-
-  /** Visibility */
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  // 確認用: Sort
-  useEffect(() => {
-    console.group("🔵 columnVisibility");
-    console.log(columnVisibility);
-    console.groupEnd();
-  }, [columnVisibility]);
 
   /** Table 作成 */
   const table = useReactTable<Student>({
@@ -201,8 +250,12 @@ export default function Page() {
 
     // Column Resize
     enableColumnResizing: true,
-    columnResizeMode,
+    columnResizeMode: "onChange",
     onColumnSizingChange: setColumnSizing,
+
+    // Row Pinned
+    onRowPinningChange: setRowPinning,
+    keepPinnedRows: true, // ピン留めされた行をページネーションやフィルタリング時に保持する
 
     // Row Selection
     enableMultiRowSelection: true, // Rowの複数選択 (defalut: true)
@@ -225,6 +278,7 @@ export default function Page() {
       columnSizing,
       columnVisibility,
       rowSelection,
+      rowPinning,
       sorting,
     },
     debugTable: false,
@@ -296,7 +350,7 @@ export default function Page() {
                       <GridTableHeaderCell
                         key={header.id}
                         header={header}
-                        style={getCommonPinningStyle(
+                        style={getColumnPinningStyle(
                           header.column,
                           "var(--primaryColor)"
                         )}
@@ -307,19 +361,55 @@ export default function Page() {
                 ))}
               </div>
               <div className="grid__body">
-                {table.getRowModel().rows.map((row) => (
+                {table.getTopRows().map((row) => (
+                  <div
+                    key={row.id}
+                    className={`grid__row pinned-top ${
+                      row.getCanSelect() ? "selectable" : "no-selectable"
+                    } ${rowSelected[row.index] ? "selected" : ""}`}
+                    onClick={() => handleRowClick(row)}
+                    style={getRowPinningStyle(row, table)}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <GridTableBodyCell
+                        key={cell.id}
+                        cell={cell}
+                        style={getColumnPinningStyle(cell.column)}
+                      />
+                    ))}
+                  </div>
+                ))}
+                {table.getCenterRows().map((row) => (
                   <div
                     key={row.id}
                     className={`grid__row ${
                       row.getCanSelect() ? "selectable" : "no-selectable"
-                    } ${rowSelection[row.index] ? "selected" : ""}`}
+                    } ${rowSelected[row.index] ? "selected" : ""}`}
                     onClick={() => handleRowClick(row)}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <GridTableBodyCell
                         key={cell.id}
                         cell={cell}
-                        style={getCommonPinningStyle(cell.column)}
+                        style={getColumnPinningStyle(cell.column)}
+                      />
+                    ))}
+                  </div>
+                ))}
+                {table.getBottomRows().map((row) => (
+                  <div
+                    key={row.id}
+                    className={`grid__row pinned-bottom ${
+                      row.getCanSelect() ? "selectable" : "no-selectable"
+                    } ${rowSelected[row.index] ? "selected" : ""}`}
+                    onClick={() => handleRowClick(row)}
+                    style={getRowPinningStyle(row, table)}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <GridTableBodyCell
+                        key={cell.id}
+                        cell={cell}
+                        style={getColumnPinningStyle(cell.column)}
                       />
                     ))}
                   </div>

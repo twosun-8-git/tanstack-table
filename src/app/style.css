@@ -119,6 +119,12 @@ select {
   border: var(--border);
   border-radius: 4px;
 }
+button {
+  appearance: none;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
 .wrapper {
   width: min(1024px, 100%);
   height: 100vh;
@@ -322,10 +328,6 @@ header p {
 }
 .grid__header .grid__cell button {
   display: inline-block;
-  appearance: none;
-  background: transparent;
-  border: none;
-  padding: 0;
   color: #fff;
   cursor: pointer;
   opacity: 0;
