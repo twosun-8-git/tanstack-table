@@ -1,13 +1,12 @@
 import { Table } from "@tanstack/react-table";
-import { Student } from "@/app/_rows/type";
 
-type Props = {
-  table: Table<Student>;
+type Props<T> = {
+  table: Table<T>;
 };
 
-export function ColumnVisibility({ table }: Props) {
+export function ColumnVisibility<T>({ table }: Props<T>) {
   return (
-    <div className="column-controller__inner">
+    <div className="column-controller__inner visibility">
       <p>カラムの表示</p>
       <ul>
         <li>

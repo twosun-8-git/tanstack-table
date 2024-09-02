@@ -1,11 +1,10 @@
 import { Table } from "@tanstack/react-table";
-import { Student } from "@/app/_rows/type";
 
-type Props = {
-  table: Table<Student>;
+type Props<T> = {
+  table: Table<T>;
 };
 
-export function ColumnFilter({ table }: Props) {
+export function ColumnFilter<T>({ table }: Props<T>) {
   const getColumnFilterValue = (columnId: string) => {
     const column = table.getColumn(columnId);
     if (!column) return "";

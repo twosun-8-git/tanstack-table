@@ -26,7 +26,11 @@ export function GridTableHeaderCell<T>({
     disabled: !isDraggable,
   });
 
-  const draggableStyle: CSSProperties = {
+  const isPinnedColumn = header.column.getIsPinned();
+
+  const isSortedColumn = header.column.getIsSorted();
+
+  const columnStyle: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
     transform: CSS.Translate.toString(transform),
     transition,
@@ -36,17 +40,15 @@ export function GridTableHeaderCell<T>({
   };
 
   const contentStyle: CSSProperties = {
-    cursor: isDraggable ? "grab" : "default",
+    cursor: isDraggable && !isPinnedColumn ? "grab" : "default",
   };
-
-  const isSortedColumn = header.column.getIsSorted();
 
   return (
     <div
       id={header.column.id}
-      className="grid__cell"
+      className={`grid__cell ${isPinnedColumn ? "is-pinned" : ""}`}
       ref={setNodeRef}
-      style={draggableStyle}
+      style={columnStyle}
     >
       <div className="grid__cell-inner">
         <div
@@ -78,7 +80,7 @@ export function GridTableHeaderCell<T>({
           onMouseDown={header.getResizeHandler()}
           onTouchStart={header.getResizeHandler()}
           className={`resizer ${
-            header.column.getIsResizing() && "is-resizing"
+            header.column.getIsResizing() ? "is-resizing" : ""
           }`}
           onClick={(e) => {
             e.stopPropagation();

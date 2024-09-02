@@ -1,10 +1,12 @@
 :root {
   --grayLight: #ddd;
   --grayLightEx: #f1f1f1;
-  --green: #00a593;
+  --primaryColor: #00a593;
+  --secondaryColor: #eef6f5;
   --blue: rgb(0, 117, 255);
   --red: rgb(237, 102, 102);
-  --controllerWidth: 240px;
+  --controllerWidth: 220px;
+  --gap: 36px;
   --border: 1px solid var(--grayLight);
 }
 * {
@@ -189,31 +191,44 @@ header p {
   flex-shrink: 0;
 }
 .column-controller__inner {
+  font-size: 12px;
   border-radius: 6px;
   border: var(--border);
   overflow: hidden;
 }
 .column-controller__inner + .column-controller__inner {
-  margin-top: 24px;
+  margin-top: 16px;
 }
 .column-controller__inner > p {
-  font-size: 14px;
-  background: var(--green);
+  background: var(--primaryColor);
   color: #fff;
   font-weight: bold;
-  padding: 10px;
+  padding: 10px 12px;
 }
 .column-controller__inner ul {
   list-style: none;
   padding: 12px;
 }
 .column-controller__inner li + li {
-  margin-top: 12px;
+  margin-top: 10px;
+}
+.column-controller__inner li ul {
+  display: flex;
+  align-items: center;
+  padding: 10px 0 8px;
+}
+.column-controller__inner li ul li + li {
+  margin-top: 0;
+  margin-left: 16px;
 }
 .column-controller__inner label {
   display: flex;
   gap: 4px;
+  align-items: center;
   flex-wrap: wrap;
+}
+.column-controller__inner.visibility label:has(input[type="checkbox"]) {
+  width: fit-content;
 }
 .column-controller__inner label > span {
   font-size: 12px;
@@ -226,8 +241,8 @@ header p {
 
 /** Grid */
 .column-controller + .grid {
-  width: calc(100% - (var(--controllerWidth) + 48px));
-  margin-left: 48px;
+  width: calc(100% - (var(--controllerWidth) + var(--gap)));
+  margin-left: var(--gap);
 }
 .grid {
   height: fit-content;
@@ -251,8 +266,11 @@ header p {
   display: grid;
   grid-auto-flow: column;
 }
+.grid__row.selectable {
+  cursor: pointer;
+}
 .grid__row.selected .grid__cell {
-  background: #eef6f5;
+  background: var(--secondaryColor);
 }
 .grid__row.no-selectable {
   cursor: not-allowed;
@@ -266,7 +284,7 @@ header p {
 .grid__cell {
   padding: 8px;
   overflow: hidden;
-  background: #fff;
+  background: inherit;
   text-overflow: ellipsis;
   white-space: nowrap;
   padding: 14px;
@@ -279,10 +297,9 @@ header p {
 }
 .grid__header .grid__cell {
   font-weight: bold;
-  background-color: var(--green);
+  background-color: var(--primaryColor);
   color: #fff;
   position: relative;
-  padding-block: 8px;
 }
 .grid__header .grid__cell + .grid__cell {
   border-left: 1px solid rgba(255, 255, 255, 0.8);
@@ -342,9 +359,6 @@ header p {
 @media (hover: hover) {
   .resizer {
     opacity: 0;
-  }
-  .grid__cell:has(.is-resizing) .grid__cell:hover .resizer {
-    opacity: 1;
   }
   .grid__cell:has(.is-resizing) + .grid__cell:hover .resizer {
     opacity: 0;

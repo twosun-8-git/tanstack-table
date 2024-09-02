@@ -3,6 +3,7 @@ import { Table, ColumnResizeMode } from "@tanstack/react-table";
 import { Student } from "@/app/_rows/type";
 import { ColumnVisibility } from "./ColumnVisibility";
 import { ColumnFilter } from "./ColumnFilter";
+import { ColumnPinned } from "./ColumnPinned";
 import { ColumnResizeSetting } from "./ColumnResizeSetting";
 
 type Props = {
@@ -15,6 +16,7 @@ export function ColumnController({ table, mode, changeMode }: Props) {
     <div className="column-controller">
       <ColumnVisibility table={table} />
       <ColumnFilter table={table} />
+      <ColumnPinned table={table} />
       <ColumnResizeSetting mode={mode} changeMode={changeMode} />
     </div>
   );

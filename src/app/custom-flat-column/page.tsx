@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, CSSProperties } from "react";
 import {
   Column,
   Row,
@@ -60,7 +60,7 @@ export default function Page() {
   }, [columnFilters]);
 
   /** Column Order */
-  const nonDraggableColumns = ["select", "no"]; // 並び替え対象外カラムID
+  const nonDraggableColumns: string[] = []; // 並び替え対象外カラムID
   const [columnOrder, setColumnOrder] = useState<string[]>(() =>
     /**
      * Display Column: id 必須
@@ -85,21 +85,34 @@ export default function Page() {
 
   /** Column Pinning */
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
-    // left: ["select", "no", "gender"], // カラムIDを指定
+    left: [], // カラムIDを指定
     right: [],
   });
 
-  function getPinnedStyles<T>(column: Column<T, unknown>) {
-    if (!column.getIsPinned()) {
-      return {};
-    }
+  function getCommonPinningStyle<T>(
+    column: Column<T>,
+    bgColor: string = "var(--secondaryColor)"
+  ): CSSProperties {
+    const isPinned = column.getIsPinned();
+
+    /** 左から1, 2番目などでCSSを分けたい場合は下記を利用 */
+    // const isFirstLeftPinnedColumn =
+    //   isPinned === "left" && column.getIsFirstColumn("left");
+    // const isLastLeftPinnedColumn =
+    //   isPinned === "left" && column.getIsLastColumn("left");
+    // const isFirstRightPinnedColumn =
+    //   isPinned === "right" && column.getIsFirstColumn("right");
+    // const isLastRightPinnedColumn =
+    //   isPinned === "right" && column.getIsLastColumn("right");
 
     return {
-      position: "sticky" as const,
-      left: column.getIsPinned() === "left" ? `${column.getStart()}px` : "auto",
-      right:
-        column.getIsPinned() === "right" ? `${column.getAfter()}px` : "auto",
-      zIndex: 1,
+      ...(isPinned ? { backgroundColor: bgColor } : {}),
+      left: isPinned === "left" ? `${column.getStart("left")}px` : undefined,
+      right: isPinned === "right" ? `${column.getAfter("right")}px` : undefined,
+      position: isPinned ? "sticky" : "relative",
+      opacity: isPinned ? 0.92 : 1,
+      width: column.getSize(),
+      zIndex: isPinned ? 1 : 0,
     };
   }
 
@@ -283,7 +296,10 @@ export default function Page() {
                       <GridTableHeaderCell
                         key={header.id}
                         header={header}
-                        style={getPinnedStyles(header.column)}
+                        style={getCommonPinningStyle(
+                          header.column,
+                          "var(--primaryColor)"
+                        )}
                         isDraggable={!nonDraggableColumns.includes(header.id)}
                       />
                     ))}
@@ -303,7 +319,7 @@ export default function Page() {
                       <GridTableBodyCell
                         key={cell.id}
                         cell={cell}
-                        style={getPinnedStyles(cell.column)}
+                        style={getCommonPinningStyle(cell.column)}
                       />
                     ))}
                   </div>

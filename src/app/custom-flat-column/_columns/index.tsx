@@ -85,6 +85,7 @@ export const columns = [
     cell: (info) => `${info.getValue()} 組`,
     footer: "組",
     filterFn: "equals",
+    enablePinning: false,
     size: 120,
     minSize: 100,
     maxSize: 120,
