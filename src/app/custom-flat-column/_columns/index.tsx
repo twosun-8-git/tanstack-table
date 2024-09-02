@@ -16,17 +16,21 @@ export const columns = [
     header: "Pin",
     cell: ({ row }) =>
       row.getIsPinned() ? (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            row.pin(false);
-          }}
-        >
-          ✖
-        </button>
-      ) : (
-        <div>
+        <div className="pin">
           <button
+            className="pin__reset"
+            onClick={(e) => {
+              e.stopPropagation();
+              row.pin(false);
+            }}
+          >
+            ✖
+          </button>
+        </div>
+      ) : (
+        <div className="pin">
+          <button
+            className="pin__top"
             onClick={(e) => {
               e.stopPropagation();
               row.pin("top");
@@ -35,6 +39,7 @@ export const columns = [
             ⬆️
           </button>
           <button
+            className="pin__bottom"
             onClick={(e) => {
               e.stopPropagation();
               row.pin("bottom");
@@ -47,7 +52,7 @@ export const columns = [
     enableHiding: false,
     enableSorting: false,
     enableResizing: false,
-    size: 80,
+    size: 60,
   }),
   columnHelper.display({
     id: "select",

@@ -45,6 +45,7 @@ import { rows } from "@/app/_rows";
 import {
   ColumnController,
   GridTableHeaderCell,
+  GridTableBodyRow,
   GridTableBodyCell,
   GridTableFooterCell,
 } from "@/app/_components";
@@ -165,28 +166,30 @@ export default function Page() {
   function getRowPinningStyle<T>(
     row: Row<T>,
     table: Table<T>,
-    bgColor: string = "var(--secondaryColor)"
+    bgColor: string = "#fffce6",
+    columnHeight: string = "var(--columnHeight)",
+    rowHeight: string = "var(--rowHeight)"
   ): CSSProperties {
     const isRowPinned = row.getIsPinned();
 
     if (!isRowPinned) return {};
 
-    const baseStyle: CSSProperties = {
+    const style: CSSProperties = {
       position: "sticky",
       backgroundColor: bgColor,
       zIndex: 1,
     };
 
     if (isRowPinned === "top") {
-      baseStyle.top = `${row.getPinnedIndex() * 26 + 48}px`;
+      style.top = `calc(${row.getPinnedIndex()} * ${rowHeight} + ${columnHeight})`;
     } else if (isRowPinned === "bottom") {
-      baseStyle.bottom = `${
-        (table.getBottomRows().length - 1 - row.getPinnedIndex()) * 26
-      }px`;
+      style.bottom = `calc((${
+        table.getBottomRows().length - 1 - row.getPinnedIndex()
+      }) * ${rowHeight})`;
     }
-
-    return baseStyle;
+    return style;
   }
+
   /** Row Selection */
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [rowSelected, setRowSelected] = useState<RowSelectionState>({});
@@ -253,7 +256,8 @@ export default function Page() {
     columnResizeMode: "onChange",
     onColumnSizingChange: setColumnSizing,
 
-    // Row Pinned
+    // Row Pinning
+    enableRowPinning: true,
     onRowPinningChange: setRowPinning,
     keepPinnedRows: true, // ピン留めされた行をページネーションやフィルタリング時に保持する
 
@@ -362,13 +366,13 @@ export default function Page() {
               </div>
               <div className="grid__body">
                 {table.getTopRows().map((row) => (
-                  <div
+                  <GridTableBodyRow
                     key={row.id}
-                    className={`grid__row pinned-top ${
-                      row.getCanSelect() ? "selectable" : "no-selectable"
-                    } ${rowSelected[row.index] ? "selected" : ""}`}
-                    onClick={() => handleRowClick(row)}
+                    row={row}
+                    rowSelected={rowSelected}
+                    handleRowClick={handleRowClick}
                     style={getRowPinningStyle(row, table)}
+                    isPinned="top"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <GridTableBodyCell
@@ -377,15 +381,17 @@ export default function Page() {
                         style={getColumnPinningStyle(cell.column)}
                       />
                     ))}
-                  </div>
+                  </GridTableBodyRow>
                 ))}
-                {table.getCenterRows().map((row) => (
-                  <div
+                {(table.options.enableRowPinning
+                  ? table.getCenterRows()
+                  : table.getRowModel().rows
+                ).map((row) => (
+                  <GridTableBodyRow
                     key={row.id}
-                    className={`grid__row ${
-                      row.getCanSelect() ? "selectable" : "no-selectable"
-                    } ${rowSelected[row.index] ? "selected" : ""}`}
-                    onClick={() => handleRowClick(row)}
+                    row={row}
+                    rowSelected={rowSelected}
+                    handleRowClick={handleRowClick}
                   >
                     {row.getVisibleCells().map((cell) => (
                       <GridTableBodyCell
@@ -394,16 +400,16 @@ export default function Page() {
                         style={getColumnPinningStyle(cell.column)}
                       />
                     ))}
-                  </div>
+                  </GridTableBodyRow>
                 ))}
                 {table.getBottomRows().map((row) => (
-                  <div
+                  <GridTableBodyRow
                     key={row.id}
-                    className={`grid__row pinned-bottom ${
-                      row.getCanSelect() ? "selectable" : "no-selectable"
-                    } ${rowSelected[row.index] ? "selected" : ""}`}
-                    onClick={() => handleRowClick(row)}
+                    row={row}
+                    rowSelected={rowSelected}
+                    handleRowClick={handleRowClick}
                     style={getRowPinningStyle(row, table)}
+                    isPinned="bottom"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <GridTableBodyCell
@@ -412,7 +418,7 @@ export default function Page() {
                         style={getColumnPinningStyle(cell.column)}
                       />
                     ))}
-                  </div>
+                  </GridTableBodyRow>
                 ))}
               </div>
               <div className="grid__footer">

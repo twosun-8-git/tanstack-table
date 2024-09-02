@@ -8,6 +8,8 @@
   --controllerWidth: 220px;
   --gap: 36px;
   --border: 1px solid var(--grayLight);
+  --columnHeight: 40px;
+  --rowHeight: 48px;
 }
 * {
   margin: 0;
@@ -107,6 +109,11 @@
   100% {
     transform: scaleY(-1) rotate(-135deg);
   }
+}
+.checkbox {
+  display: flex;
+  width: 100%;
+  justify-content: center;
 }
 input[type="checkbox"] {
   display: block;
@@ -288,12 +295,14 @@ header p {
   font-weight: normal;
 }
 .grid__cell {
-  padding: 8px;
+  display: flex;
+  align-items: center;
+  height: var(--rowHeight);
   overflow: hidden;
   background: inherit;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 14px;
+  padding-inline: 14px;
 }
 .grid__cell span.male {
   color: var(--blue);
@@ -302,6 +311,7 @@ header p {
   color: var(--red);
 }
 .grid__header .grid__cell {
+  height: var(--columnHeight);
   font-weight: bold;
   background-color: var(--primaryColor);
   color: #fff;
@@ -357,7 +367,23 @@ header p {
   background: rgb(250, 97, 108);
   opacity: 1;
 }
-
+.pin {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+}
+.pin__reset {
+  font-size: 18px;
+  color: #c8c8c8;
+}
+.pin__top,
+.pin__bottom {
+  font-size: 16px;
+  color: #c8c8c8;
+  padding: 2px;
+  cursor: pointer;
+}
 @media (hover: hover) {
   .resizer {
     opacity: 0;
@@ -367,5 +393,12 @@ header p {
   }
   .grid__cell:hover .resizer {
     opacity: 1;
+  }
+  .pin__top:hover,
+  .pin__bottom:hover {
+    color: var(--primaryColor);
+  }
+  .pin__reset:hover {
+    color: var(--red);
   }
 }
