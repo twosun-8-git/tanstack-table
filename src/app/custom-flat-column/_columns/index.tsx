@@ -52,6 +52,7 @@ export const columns = [
     enableHiding: false,
     enableSorting: false,
     enableResizing: false,
+    enablePinning: false,
     size: 60,
   }),
   columnHelper.display({

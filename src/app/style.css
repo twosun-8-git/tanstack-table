@@ -298,17 +298,8 @@ header p {
   display: flex;
   align-items: center;
   height: var(--rowHeight);
-  overflow: hidden;
   background: inherit;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   padding-inline: 14px;
-}
-.grid__cell span.male {
-  color: var(--blue);
-}
-.grid__cell span.female {
-  color: var(--red);
 }
 .grid__header .grid__cell {
   height: var(--columnHeight);
@@ -336,6 +327,19 @@ header p {
   display: flex;
   align-items: center;
 }
+.grid__cell-content {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.grid__cell span.male {
+  color: var(--blue);
+}
+.grid__cell span.female {
+  color: var(--red);
+}
+
 .grid__header .grid__cell button {
   display: inline-block;
   color: #fff;

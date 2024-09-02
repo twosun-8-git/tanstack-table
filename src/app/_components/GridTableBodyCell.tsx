@@ -29,7 +29,9 @@ export function GridTableBodyCell<T>({ cell, style }: Props<T>) {
       className="grid__cell"
       style={dragAlongStyle}
     >
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      <div className="grid__cell-content">
+        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+      </div>
     </div>
   );
 }
