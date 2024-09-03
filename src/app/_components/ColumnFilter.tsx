@@ -1,15 +1,14 @@
-import { Table } from "@tanstack/react-table";
+import { Table, Column } from "@tanstack/react-table";
+import { getColumnFilterValue } from "@/app/_utils";
 
 type Props<T> = {
   table: Table<T>;
 };
 
 export function ColumnFilter<T>({ table }: Props<T>) {
-  const getColumnFilterValue = (columnId: string) => {
-    const column = table.getColumn(columnId);
-    if (!column) return "";
-    return column.getFilterValue() as string;
-  };
+  const { enableColumnFilters } = table.options;
+
+  if (!enableColumnFilters) return;
 
   const hanldeChangeColumnFilter = (
     e: React.ChangeEvent<HTMLSelectElement>,
@@ -27,6 +26,7 @@ export function ColumnFilter<T>({ table }: Props<T>) {
       }
     }
   };
+
   return (
     <div className="column-controller__inner">
       <p>カラムのフィルタリング</p>
@@ -35,7 +35,7 @@ export function ColumnFilter<T>({ table }: Props<T>) {
           <label>
             <span>性別</span>
             <select
-              value={getColumnFilterValue("gender")}
+              value={getColumnFilterValue(table.getColumn("gender"))}
               onChange={(e) => hanldeChangeColumnFilter(e, "gender")}
             >
               <option value="">全て</option>
@@ -48,7 +48,7 @@ export function ColumnFilter<T>({ table }: Props<T>) {
           <label>
             <span>学年</span>
             <select
-              value={getColumnFilterValue("grade")}
+              value={getColumnFilterValue(table.getColumn("grade"))}
               onChange={(e) => hanldeChangeColumnFilter(e, "grade")}
             >
               <option value="">全て</option>
@@ -64,7 +64,7 @@ export function ColumnFilter<T>({ table }: Props<T>) {
           <label>
             <span>クラス</span>
             <select
-              value={getColumnFilterValue("class")}
+              value={getColumnFilterValue(table.getColumn("class"))}
               onChange={(e) => hanldeChangeColumnFilter(e, "class")}
             >
               <option value="">全て</option>
@@ -80,7 +80,7 @@ export function ColumnFilter<T>({ table }: Props<T>) {
           <label>
             <span>国語</span>
             <select
-              value={getColumnFilterValue("lang")}
+              value={getColumnFilterValue(table.getColumn("lang"))}
               onChange={(e) => hanldeChangeColumnFilter(e, "lang")}
             >
               <option value="">全て</option>
@@ -95,7 +95,7 @@ export function ColumnFilter<T>({ table }: Props<T>) {
           <label>
             <span>算数</span>
             <select
-              value={getColumnFilterValue("arith")}
+              value={getColumnFilterValue(table.getColumn("arith"))}
               onChange={(e) => hanldeChangeColumnFilter(e, "arith")}
             >
               <option value="">全て</option>
@@ -110,7 +110,7 @@ export function ColumnFilter<T>({ table }: Props<T>) {
           <label>
             <span>理科</span>
             <select
-              value={getColumnFilterValue("science")}
+              value={getColumnFilterValue(table.getColumn("science"))}
               onChange={(e) => hanldeChangeColumnFilter(e, "science")}
             >
               <option value="">全て</option>

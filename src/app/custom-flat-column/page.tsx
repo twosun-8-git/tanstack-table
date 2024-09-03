@@ -217,8 +217,8 @@ export default function Page() {
     columns,
     getCoreRowModel: getCoreRowModel(),
 
-    // Column Filter （矛盾）
-    enableColumnFilters: false,
+    // Column Filter
+    enableColumnFilters: true,
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
 

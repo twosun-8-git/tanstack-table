@@ -89,7 +89,7 @@ export const columns = [
     footer: (info) => info.column.id.toUpperCase(),
     // enableHiding: false,
     // enableResizing: false,
-    size: 50,
+    size: 68,
   }),
   columnHelper.display({
     id: "fullName",
@@ -114,7 +114,7 @@ export const columns = [
       </span>
     ),
     footer: "性別",
-    filterFn: "equals",
+    // filterFn: "equals",
     // enableSorting: false,
     size: 120,
     minSize: 100,

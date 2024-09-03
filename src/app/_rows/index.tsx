@@ -1165,10 +1165,6 @@ export const rows = [
     arith: 82,
     science: 80,
   },
-];
-
-// 107-116件目のサンプル
-export const rowsSample6 = [
   {
     no: 107,
     lastName: "かわい",
@@ -1184,7 +1180,7 @@ export const rowsSample6 = [
     no: 108,
     lastName: "たなべ",
     firstName: "みお",
-    gender: "女子",
+    gender: "男子",
     grade: 1,
     class: 4,
     lang: 67,

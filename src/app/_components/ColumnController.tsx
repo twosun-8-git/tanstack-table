@@ -21,8 +21,8 @@ export function ColumnController({ table, mode, changeMode }: Props) {
 
   return (
     <div className="column-controller">
-      <ColumnVisibility table={table} />
-      <ColumnFilter table={table} />
+      {enableHiding && <ColumnVisibility table={table} />}
+      {enableColumnFilters && <ColumnFilter table={table} />}
       <ColumnPinned table={table} />
       <ColumnResizeSetting mode={mode} changeMode={changeMode} />
     </div>
