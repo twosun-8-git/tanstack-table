@@ -1,3 +1,5 @@
+"use client";
+
 import { ColumnResizeMode } from "@tanstack/react-table";
 
 type Props = {

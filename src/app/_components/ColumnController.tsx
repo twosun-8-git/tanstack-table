@@ -1,3 +1,5 @@
+"use client";
+
 import { Table, ColumnResizeMode } from "@tanstack/react-table";
 
 import { Student } from "@/app/_rows/type";
