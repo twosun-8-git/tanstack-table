@@ -12,6 +12,13 @@ type Props = {
   changeMode: (value: ColumnResizeMode) => void;
 };
 export function ColumnController({ table, mode, changeMode }: Props) {
+  const {
+    enableColumnFilters,
+    enableColumnPinning,
+    enableColumnResizing,
+    enableHiding,
+  } = table.options;
+
   return (
     <div className="column-controller">
       <ColumnVisibility table={table} />

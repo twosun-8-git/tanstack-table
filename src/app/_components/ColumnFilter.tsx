@@ -14,7 +14,6 @@ export function ColumnFilter<T>({ table }: Props<T>) {
   const hanldeChangeColumnFilter = (
     e: React.ChangeEvent<HTMLSelectElement>,
     columnId: string
-    // value?: string,
   ) => {
     const _value = e.target.value;
     const _column = table.getColumn(columnId);

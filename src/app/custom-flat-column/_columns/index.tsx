@@ -10,6 +10,13 @@ const gteFilter: FilterFn<Student> = (row, columnId, filterValue) => {
   return _rowValue >= Number(filterValue);
 };
 
+/** Column Options（ 指定されていない場合はテーブルのオプションの値に従う ）
+ * enableColumnFilter: カラムのフィルタリングの有効 / 無効
+ * enableGlobalFilter: カラムのフグローバルィルタリングの有効 / 無効
+ * enableHiding: カラムの表示非表示の有効 / 無効
+ * enableSorting: カラムのソートの有効 / 無効
+ */
+
 export const columns = [
   columnHelper.display({
     id: "pin",
@@ -49,10 +56,10 @@ export const columns = [
           </button>
         </div>
       ),
-    enableHiding: false,
-    enableSorting: false,
-    enableResizing: false,
-    enablePinning: false,
+    // enableHiding: false,
+    // enableSorting: false,
+    // enableResizing: false,
+    // enablePinning: false,
     size: 60,
   }),
   columnHelper.display({
@@ -71,17 +78,17 @@ export const columns = [
         onChange={row.getToggleSelectedHandler()}
       />
     ),
-    enableHiding: false,
-    enableSorting: false,
-    enableResizing: false,
+    // enableHiding: false,
+    // enableSorting: false,
+    // enableResizing: false,
     size: 50,
   }),
   columnHelper.accessor("no", {
     header: "No",
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id.toUpperCase(),
-    enableHiding: false,
-    enableResizing: false,
+    // enableHiding: false,
+    // enableResizing: false,
     size: 50,
   }),
   columnHelper.display({
@@ -93,7 +100,7 @@ export const columns = [
       return `${lastName} ${firstName}`;
     },
     footer: "名前",
-    enableSorting: false,
+    // enableSorting: false,
     size: 200,
     minSize: 100,
     maxSize: 300,
@@ -108,7 +115,7 @@ export const columns = [
     ),
     footer: "性別",
     filterFn: "equals",
-    enableSorting: false,
+    // enableSorting: false,
     size: 120,
     minSize: 100,
     maxSize: 120,
@@ -129,7 +136,7 @@ export const columns = [
     cell: (info) => `${info.getValue()} 組`,
     footer: "組",
     filterFn: "equals",
-    enablePinning: false,
+    // enablePinning: false,
     size: 120,
     minSize: 100,
     maxSize: 120,

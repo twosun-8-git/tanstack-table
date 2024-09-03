@@ -255,8 +255,6 @@ header p {
 /** Grid */
 .column-controller + .contents {
   width: calc(100% - (var(--controllerWidth) + var(--gap)));
-  height: fit-content;
-  max-height: 100vh;
   margin-left: var(--gap);
 }
 .column-controller + .contents .grid {

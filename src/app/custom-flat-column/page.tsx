@@ -196,26 +196,41 @@ export default function Page() {
 
   /**
    * Table 作成
-   **/
+   *
+   * Table Options（ カラム個別の指定がある場合はそれが優先される ）
+   * enableColumnFilters: カラムのフィルタリング UI の表示（ default: false ）
+   * enableGlobalFilter: カラムのフグローバルィルタリング（ default: false ）
+   * enableFilters: カラムのフィルタリング機能（ default: false ）
+   * enableGrouping: カラムのグルーピング（ default: false ）
+   * enableColumnResizing: カラムのリサイズ（ default: false ）
+   * enableHiding: カラムの表示・非表示（ default: false ）
+   * enableSorting: カラムのソート（ default: false ）
+   * enableMultiSort: 複数のカラムのソート（ default: false ）
+   * enableRowSelection: Row の選択（ default: false ）
+   * enableMultiRowSelection: 複数の Row の選択（ default: true ）
+   * enableSubRowSelection: カラムのソート（ default: true ）
+   * enableExpanding: Row の展開機能（ default: false ）
+   */
+
   const table = useReactTable<Student>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
 
-    // Column Filter
-    enableColumnFilters: true, // フィタリングのオンオフ
+    // Column Filter （矛盾）
+    enableColumnFilters: false,
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
 
-    // Column Pinning
+    // Column Pinning （矛盾）
     enableColumnPinning: false, // カラム左右固定のオンオフ (defalut: false)
     onColumnPinningChange: setColumnPinning,
 
-    // Column Order
+    // Column Order（enableColumnOrderが存在しない）
     onColumnOrderChange: setColumnOrder,
 
     // Column Resize
-    enableColumnResizing: true,
+    enableColumnResizing: false,
     columnResizeMode: "onChange",
     onColumnSizingChange: setColumnSizing,
 
@@ -223,25 +238,27 @@ export default function Page() {
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
 
-    // Row Pinning
-    enableRowPinning: true,
+    // Row Pinning（矛盾）
+    enableRowPinning: false,
     onRowPinningChange: setRowPinning,
     keepPinnedRows: true, // ピン留めされた行をページネーションやフィルタリング時に保持する
 
     // Row Selection
-    enableMultiRowSelection: true, // Rowの複数選択 (defalut: true)
-    // enableRowSelection: (row) => row.original.science >= 80, // Rowの選択条件 (defalut: true)
-    onRowSelectionChange: setRowSelection, // Row 選択時（row index: boolean）
+    enableRowSelection: false, // (row) => row.original.science >= 80 選択できる Rowの条件指定も可
+    enableMultiRowSelection: true,
+    onRowSelectionChange: setRowSelection,
 
     // Sort
-    enableSorting: true, // ソート機能 (defalut: true)
-    enableMultiSort: true, // マルチソート（defalut: true）
+    enableSorting: true,
+    enableMultiSort: true,
     sortDescFirst: true, // ソートの実行順序（default: true[ desc -> asc ], false[ asc -> desc ]）
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
 
     // Visibility
+    enableHiding: false,
     onColumnVisibilityChange: setColumnVisibility,
+
     state: {
       columnFilters,
       columnPinning,
@@ -336,7 +353,7 @@ export default function Page() {
                       key={row.id}
                       row={row}
                       rowSelected={rowSelected}
-                      handleRowClick={handleRowClick}
+                      // handleRowClick={handleRowClick}
                       style={getRowPinningStyle(row, table)}
                       isPinned="top"
                     >
@@ -357,7 +374,7 @@ export default function Page() {
                       key={row.id}
                       row={row}
                       rowSelected={rowSelected}
-                      handleRowClick={handleRowClick}
+                      // handleRowClick={handleRowClick}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <GridTableBodyCell
@@ -373,7 +390,7 @@ export default function Page() {
                       key={row.id}
                       row={row}
                       rowSelected={rowSelected}
-                      handleRowClick={handleRowClick}
+                      // handleRowClick={handleRowClick}
                       style={getRowPinningStyle(row, table)}
                       isPinned="bottom"
                     >
