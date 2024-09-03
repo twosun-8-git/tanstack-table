@@ -7,6 +7,10 @@ type Props<T> = {
 };
 
 export function ColumnPinned<T>({ table }: Props<T>) {
+  const { enableColumnPinning } = table.options;
+
+  if (!enableColumnPinning) return;
+
   return (
     <div className="column-controller__inner pinned">
       <p>カラムのピン留め</p>

@@ -63,7 +63,7 @@ export const columns = [
     size: 60,
   }),
   columnHelper.display({
-    id: "select",
+    id: "checkbox",
     header: ({ table }) => (
       <Checkbox
         checked={table.getIsAllRowsSelected()}

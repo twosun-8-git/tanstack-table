@@ -25,8 +25,10 @@ export function ColumnController({ table, mode, changeMode }: Props) {
     <div className="column-controller">
       {enableHiding && <ColumnVisibility table={table} />}
       {enableColumnFilters && <ColumnFilter table={table} />}
-      <ColumnPinned table={table} />
-      <ColumnResizeSetting mode={mode} changeMode={changeMode} />
+      {enableColumnPinning && <ColumnPinned table={table} />}
+      {enableColumnResizing && (
+        <ColumnResizeSetting mode={mode} changeMode={changeMode} />
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import {
   Row,
+  ColumnDef,
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
@@ -142,7 +143,7 @@ export default function Page() {
    * Row Pinning
    **/
   const [rowPinning, setRowPinning] = useState<RowPinningState>({
-    top: [],
+    top: [], // Row Index を String 指定
     bottom: [],
   });
 
@@ -212,9 +213,28 @@ export default function Page() {
    * enableExpanding: Row の展開機能（ default: false ）
    */
 
+  /** Column Init */
+  const isEnables = [
+    { enableRowPinning: true, id: "pin" },
+    { enableRowSelection: true, id: "checkbox" },
+  ];
+
+  const newColumns = columns.filter((column) => {
+    // すべてのフィルタ条件をチェック
+    return !isEnables.some((obj) => {
+      // フィルタの条件が false で、かつ column.id が一致する場合、
+      // そのカラムを除外する（false を返す）
+      return Object.entries(obj).every(([key, value]) => {
+        if (key === "id") return column.id === value;
+        return value === false;
+      });
+    });
+  });
+
+  /** Table Init */
   const table = useReactTable<Student>({
     data,
-    columns,
+    columns: newColumns,
     getCoreRowModel: getCoreRowModel(),
 
     // Column Filter
@@ -222,8 +242,8 @@ export default function Page() {
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
 
-    // Column Pinning （矛盾）
-    enableColumnPinning: false, // カラム左右固定のオンオフ (defalut: false)
+    // Column Pinning
+    enableColumnPinning: true,
     onColumnPinningChange: setColumnPinning,
 
     // Column Order（enableColumnOrderが存在しない）
@@ -239,12 +259,15 @@ export default function Page() {
     onPaginationChange: setPagination,
 
     // Row Pinning（矛盾）
-    enableRowPinning: false,
+    enableRowPinning: !isEnables.some((obj) => obj.enableRowPinning === false),
     onRowPinningChange: setRowPinning,
     keepPinnedRows: true, // ピン留めされた行をページネーションやフィルタリング時に保持する
 
     // Row Selection
-    enableRowSelection: false, // (row) => row.original.science >= 80 選択できる Rowの条件指定も可
+    enableRowSelection: !isEnables.some(
+      (obj) => obj.enableRowSelection === false
+    ),
+    // (row) => row.original.science >= 80 選択できる Rowの条件指定も可
     enableMultiRowSelection: true,
     onRowSelectionChange: setRowSelection,
 
@@ -256,7 +279,7 @@ export default function Page() {
     getSortedRowModel: getSortedRowModel(),
 
     // Visibility
-    enableHiding: false,
+    enableHiding: true,
     onColumnVisibilityChange: setColumnVisibility,
 
     state: {
@@ -308,6 +331,8 @@ export default function Page() {
     })
   );
 
+  const { enableRowPinning } = table.options;
+
   const isResizing = table.getState().columnSizingInfo.isResizingColumn;
 
   return (
@@ -348,25 +373,25 @@ export default function Page() {
                   ))}
                 </div>
                 <div className="grid__body">
-                  {table.getTopRows().map((row) => (
-                    <GridTableBodyRow
-                      key={row.id}
-                      row={row}
-                      rowSelected={rowSelected}
-                      // handleRowClick={handleRowClick}
-                      style={getRowPinningStyle(row, table)}
-                      isPinned="top"
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <GridTableBodyCell
-                          key={cell.id}
-                          cell={cell}
-                          style={getColumnPinningStyle(cell.column, "row")}
-                        />
-                      ))}
-                    </GridTableBodyRow>
-                  ))}
-                  {(table.options.enableRowPinning
+                  {enableRowPinning &&
+                    table.getTopRows().map((row) => (
+                      <GridTableBodyRow
+                        key={row.id}
+                        row={row}
+                        rowSelected={rowSelected}
+                        // handleRowClick={handleRowClick}
+                        style={getRowPinningStyle(row, table)}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <GridTableBodyCell
+                            key={cell.id}
+                            cell={cell}
+                            style={getColumnPinningStyle(cell.column, "row")}
+                          />
+                        ))}
+                      </GridTableBodyRow>
+                    ))}
+                  {(enableRowPinning
                     ? table.getCenterRows()
                     : table.getRowModel().rows
                   ).map((row) => (
@@ -385,24 +410,24 @@ export default function Page() {
                       ))}
                     </GridTableBodyRow>
                   ))}
-                  {table.getBottomRows().map((row) => (
-                    <GridTableBodyRow
-                      key={row.id}
-                      row={row}
-                      rowSelected={rowSelected}
-                      // handleRowClick={handleRowClick}
-                      style={getRowPinningStyle(row, table)}
-                      isPinned="bottom"
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <GridTableBodyCell
-                          key={cell.id}
-                          cell={cell}
-                          style={getColumnPinningStyle(cell.column, "row")}
-                        />
-                      ))}
-                    </GridTableBodyRow>
-                  ))}
+                  {enableRowPinning &&
+                    table.getBottomRows().map((row) => (
+                      <GridTableBodyRow
+                        key={row.id}
+                        row={row}
+                        rowSelected={rowSelected}
+                        // handleRowClick={handleRowClick}
+                        style={getRowPinningStyle(row, table)}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <GridTableBodyCell
+                            key={cell.id}
+                            cell={cell}
+                            style={getColumnPinningStyle(cell.column, "row")}
+                          />
+                        ))}
+                      </GridTableBodyRow>
+                    ))}
                 </div>
                 <div className="grid__footer">
                   {table.getFooterGroups().map((footerGroup) => (

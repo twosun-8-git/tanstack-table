@@ -8,7 +8,6 @@ type Props<T> = {
   rowSelected: RowSelectionState;
   handleRowClick?: (row: Row<T>) => void;
   style?: CSSProperties;
-  isPinned?: "top" | "bottom" | false;
   children: React.ReactNode;
 };
 
