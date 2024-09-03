@@ -1,4 +1,4 @@
-import { Table, Column } from "@tanstack/react-table";
+import { Table } from "@tanstack/react-table";
 import { getColumnFilterValue } from "@/app/_utils";
 
 type Props<T> = {
@@ -26,7 +26,6 @@ export function ColumnFilter<T>({ table }: Props<T>) {
       }
     }
   };
-
   return (
     <div className="column-controller__inner">
       <p>カラムのフィルタリング</p>
