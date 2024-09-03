@@ -294,10 +294,7 @@ export default function Page() {
                       <GridTableHeaderCell
                         key={header.id}
                         header={header}
-                        style={getColumnPinningStyle(
-                          header.column,
-                          "var(--primaryColor)"
-                        )}
+                        style={getColumnPinningStyle(header.column)}
                         isDraggable={!nonDraggableColumns.includes(header.id)}
                       />
                     ))}
@@ -318,7 +315,10 @@ export default function Page() {
                       <GridTableBodyCell
                         key={cell.id}
                         cell={cell}
-                        style={getColumnPinningStyle(cell.column)}
+                        style={getColumnPinningStyle({
+                          column: cell.column,
+                          tableRole: "row",
+                        })}
                       />
                     ))}
                   </GridTableBodyRow>
@@ -337,7 +337,7 @@ export default function Page() {
                       <GridTableBodyCell
                         key={cell.id}
                         cell={cell}
-                        style={getColumnPinningStyle(cell.column)}
+                        style={getColumnPinningStyle(cell.column, "row")}
                       />
                     ))}
                   </GridTableBodyRow>
@@ -355,7 +355,7 @@ export default function Page() {
                       <GridTableBodyCell
                         key={cell.id}
                         cell={cell}
-                        style={getColumnPinningStyle(cell.column)}
+                        style={getColumnPinningStyle(cell.column, "row")}
                       />
                     ))}
                   </GridTableBodyRow>

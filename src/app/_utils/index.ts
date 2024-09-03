@@ -5,11 +5,14 @@ import { Table, Column, Row } from "@tanstack/react-table";
 /** Column Pinning */
 export function getColumnPinningStyle<T>(
   column: Column<T>,
-  bgColor: string = "var(--secondaryColor)"
+  tableRole: "column" | "row" = "column"
 ): CSSProperties {
   const isColumnPinned = column.getIsPinned();
 
   if (!isColumnPinned) return {};
+
+  const bgColor =
+    tableRole === "column" ? "var(--primaryColor)" : "var(--secondaryColor)";
 
   /** 左から1, 2番目などでCSSを分けたい場合は下記を利用 */
   // const isFirstLeftPinnedColumn =
@@ -22,15 +25,17 @@ export function getColumnPinningStyle<T>(
   //   isPinned === "right" && column.getIsLastColumn("right");
 
   return {
-    ...(isColumnPinned ? { backgroundColor: bgColor } : {}),
-    left:
-      isColumnPinned === "left" ? `${column.getStart("left")}px` : undefined,
-    right:
-      isColumnPinned === "right" ? `${column.getAfter("right")}px` : undefined,
-    position: isColumnPinned ? "sticky" : "relative",
+    backgroundColor: bgColor,
     opacity: isColumnPinned ? 0.92 : 1,
     width: column.getSize(),
     zIndex: isColumnPinned ? 1 : 0,
+    position: isColumnPinned ? "sticky" : "relative",
+    ...(isColumnPinned === "left"
+      ? { left: `${column.getStart("left")}px` }
+      : {}),
+    ...(isColumnPinned === "right"
+      ? { left: `${column.getAfter("right")}px` }
+      : {}),
   };
 }
 
