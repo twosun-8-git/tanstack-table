@@ -253,9 +253,15 @@ header p {
 }
 
 /** Grid */
-.column-controller + .grid {
+.column-controller + .contents {
   width: calc(100% - (var(--controllerWidth) + var(--gap)));
+  height: fit-content;
+  max-height: 100vh;
   margin-left: var(--gap);
+}
+.column-controller + .contents .grid {
+  height: auto;
+  max-height: none;
 }
 .grid {
   height: fit-content;
@@ -323,6 +329,10 @@ header p {
   padding-block: 8px;
   color: #aaa;
 }
+.grid__footer .grid__cell {
+  height: 24px;
+}
+
 .grid__cell-inner {
   display: flex;
   align-items: center;
@@ -388,6 +398,65 @@ header p {
   padding: 2px;
   cursor: pointer;
 }
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 12px;
+  gap: 16px;
+  padding-block: 16px;
+  color: #888;
+}
+.pagination b {
+  color: #000;
+}
+.pagination__list {
+  display: flex;
+  list-style: none;
+  gap: 8px;
+}
+.pagination__list button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  background: none;
+  border: var(--border);
+  color: #666;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.pagination__list button:disabled {
+  color: #ddd;
+  cursor: not-allowed;
+}
+.pagination__block {
+  display: flex;
+  align-items: center;
+}
+.pagination__block.status {
+  height: 30px;
+  border-radius: 4px;
+  margin-right: auto;
+}
+.pagination__block > span {
+  margin-right: 6px;
+}
+.pagination__block input,
+.pagination__block select {
+  width: 60px;
+  height: 30px;
+  padding: 4px;
+  border: var(--border);
+  border-radius: 4px;
+}
+.pagination__block select {
+  cursor: pointer;
+}
+
 @media (hover: hover) {
   .resizer {
     opacity: 0;
