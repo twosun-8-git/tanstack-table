@@ -40,8 +40,8 @@ import {
   sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 
-import { columns } from "./_columns";
 import { Student } from "@/app/_rows/type";
+import { columns } from "./_columns";
 import { rows } from "@/app/_rows";
 import {
   ColumnController,
@@ -61,6 +61,7 @@ export default function Page() {
    * Column Filter
    **/
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
   // 確認用: Column Order
   useEffect(() => {
     console.info("🔴 Column Filters: ", columnFilters);
@@ -131,7 +132,7 @@ export default function Page() {
    **/
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 10,
+    pageSize: 20,
   });
 
   // 確認用: Pagination
@@ -158,7 +159,7 @@ export default function Page() {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [rowSelected, setRowSelected] = useState<RowSelectionState>({});
 
-  function handleRowClick<T>(row: Row<T>, isCheck: boolean = true) {
+  const handleRowClick = <T,>(row: Row<T>, isCheck: boolean = true) => {
     // enableRowSelection の条件にマッチしていない場合は何もしない
     if (!row.getCanSelect()) return;
 
@@ -178,7 +179,7 @@ export default function Page() {
 
     // 選択した Row データ
     console.log(row.index);
-  }
+  };
 
   // 確認用: RowSelection
   useEffect(() => {
@@ -250,7 +251,7 @@ export default function Page() {
     onColumnOrderChange: setColumnOrder,
 
     // Column Resize
-    enableColumnResizing: false,
+    enableColumnResizing: true,
     columnResizeMode: "onChange",
     onColumnSizingChange: setColumnSizing,
 
@@ -267,7 +268,7 @@ export default function Page() {
     enableRowSelection: !isEnables.some(
       (obj) => obj.enableRowSelection === false
     ),
-    // (row) => row.original.science >= 80 選択できる Rowの条件指定も可
+    // enableRowSelection: (row) => row.original.science >= 80, // 選択できる Rowの条件指定も可
     enableMultiRowSelection: true,
     onRowSelectionChange: setRowSelection,
 
@@ -379,7 +380,7 @@ export default function Page() {
                         key={row.id}
                         row={row}
                         rowSelected={rowSelected}
-                        // handleRowClick={handleRowClick}
+                        handleRowClick={handleRowClick}
                         style={getRowPinningStyle(row, table)}
                       >
                         {row.getVisibleCells().map((cell) => (
@@ -399,7 +400,7 @@ export default function Page() {
                       key={row.id}
                       row={row}
                       rowSelected={rowSelected}
-                      // handleRowClick={handleRowClick}
+                      handleRowClick={handleRowClick}
                     >
                       {row.getVisibleCells().map((cell) => (
                         <GridTableBodyCell
@@ -416,7 +417,7 @@ export default function Page() {
                         key={row.id}
                         row={row}
                         rowSelected={rowSelected}
-                        // handleRowClick={handleRowClick}
+                        handleRowClick={handleRowClick}
                         style={getRowPinningStyle(row, table)}
                       >
                         {row.getVisibleCells().map((cell) => (

@@ -56,7 +56,7 @@ export function Pagination<T>({ table }: Props<T>) {
             table.setPageSize(Number(e.target.value));
           }}
         >
-          {[5, 10, 15, 20, 25].map((item) => (
+          {[5, 10, 15, 20, 25, 30, 50].map((item) => (
             <option key={item} value={item}>
               {item}
             </option>

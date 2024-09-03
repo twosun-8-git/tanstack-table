@@ -258,8 +258,7 @@ header p {
   margin-left: var(--gap);
 }
 .column-controller + .contents .grid {
-  height: auto;
-  max-height: none;
+  max-height: calc(15 * var(--rowHeight) + var(--columnHeight));
 }
 .grid {
   height: fit-content;

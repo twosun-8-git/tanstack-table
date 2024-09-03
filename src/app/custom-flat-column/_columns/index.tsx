@@ -56,10 +56,10 @@ export const columns = [
           </button>
         </div>
       ),
-    // enableHiding: false,
-    // enableSorting: false,
-    // enableResizing: false,
-    // enablePinning: false,
+    enableHiding: false,
+    enableSorting: false,
+    enableResizing: false,
+    enablePinning: false,
     size: 60,
   }),
   columnHelper.display({
@@ -78,9 +78,9 @@ export const columns = [
         onChange={row.getToggleSelectedHandler()}
       />
     ),
-    // enableHiding: false,
-    // enableSorting: false,
-    // enableResizing: false,
+    enableHiding: false,
+    enableSorting: false,
+    enableResizing: false,
     size: 50,
   }),
   columnHelper.accessor("no", {
@@ -88,7 +88,7 @@ export const columns = [
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id.toUpperCase(),
     // enableHiding: false,
-    // enableResizing: false,
+    enableResizing: false,
     size: 68,
   }),
   columnHelper.display({
@@ -100,7 +100,7 @@ export const columns = [
       return `${lastName} ${firstName}`;
     },
     footer: "名前",
-    // enableSorting: false,
+    enableSorting: false,
     size: 200,
     minSize: 100,
     maxSize: 300,
@@ -114,8 +114,8 @@ export const columns = [
       </span>
     ),
     footer: "性別",
-    // filterFn: "equals",
-    // enableSorting: false,
+    filterFn: "equals",
+    enableSorting: false,
     size: 120,
     minSize: 100,
     maxSize: 120,
@@ -136,7 +136,7 @@ export const columns = [
     cell: (info) => `${info.getValue()} 組`,
     footer: "組",
     filterFn: "equals",
-    // enablePinning: false,
+    enablePinning: false,
     size: 120,
     minSize: 100,
     maxSize: 120,
