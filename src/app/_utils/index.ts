@@ -14,16 +14,6 @@ export function getColumnPinningStyle<T>(
   const bgColor =
     tableRole === "column" ? "var(--primaryColor)" : "var(--secondaryColor)";
 
-  /** 左から1, 2番目などでCSSを分けたい場合は下記を利用 */
-  // const isFirstLeftPinnedColumn =
-  //   isPinned === "left" && column.getIsFirstColumn("left");
-  // const isLastLeftPinnedColumn =
-  //   isPinned === "left" && column.getIsLastColumn("left");
-  // const isFirstRightPinnedColumn =
-  //   isPinned === "right" && column.getIsFirstColumn("right");
-  // const isLastRightPinnedColumn =
-  //   isPinned === "right" && column.getIsLastColumn("right");
-
   return {
     backgroundColor: bgColor,
     opacity: isColumnPinned ? 0.92 : 1,

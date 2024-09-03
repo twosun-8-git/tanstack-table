@@ -56,16 +56,18 @@ import { getColumnPinningStyle, getRowPinningStyle } from "@/app/_utils";
 export default function Page() {
   const [data, _setData] = useState(() => [...rows]);
 
-  /** Column Filter */
+  /**
+   * Column Filter
+   **/
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   // 確認用: Column Order
   useEffect(() => {
-    console.group("🔴 columnFilters");
-    console.log(columnFilters);
-    console.groupEnd();
+    console.info("🔴 Column Filters: ", columnFilters);
   }, [columnFilters]);
 
-  /** Column Order */
+  /**
+   * Column Order
+   **/
   const nonDraggableColumns: string[] = []; // 並び替え対象外カラムID
   const [columnOrder, setColumnOrder] = useState<string[]>(() =>
     /**
@@ -84,12 +86,12 @@ export default function Page() {
 
   // 確認用: Column Order
   useEffect(() => {
-    console.group("🟡 columnOrder");
-    console.log(columnOrder);
-    console.groupEnd();
+    console.info("🟡 Column Order: ", columnOrder);
   }, [columnOrder]);
 
-  /** Column Pinning */
+  /**
+   * Column Pinning
+   **/
   const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
     left: [], // カラムIDを指定
     right: [],
@@ -97,49 +99,61 @@ export default function Page() {
 
   // 確認用: Column Pinning
   useEffect(() => {
-    console.group("🟣 columnPinning");
-    console.log(columnPinning);
-    console.groupEnd();
+    console.info("🟣 Column Pinning: ", columnPinning);
   }, [columnPinning]);
 
-  /** Column Resize */
+  /**
+   * Column Resize
+   **/
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
   const [columnResizeMode, setColumnResizeMode] =
     useState<ColumnResizeMode>("onChange");
 
   // 確認用: Resize
   useEffect(() => {
-    console.group("🟤 columnSizing");
-    console.log(columnSizing);
-    console.groupEnd();
-    console.group("🟤 columnResizeMode");
-    console.log(columnResizeMode);
-    console.groupEnd();
+    console.info("🟤 ColumnSizing: ", columnSizing);
+    console.info("🟤 Column ResizeMode: ", columnResizeMode);
   }, [columnSizing, columnResizeMode]);
 
-  /** Column Visibility */
+  /**
+   * Column Visibility
+   **/
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   // 確認用: Visibility
   useEffect(() => {
-    console.group("🔵 columnVisibility");
-    console.log(columnVisibility);
-    console.groupEnd();
+    console.info("🔵 Column Visibility: ", columnVisibility);
   }, [columnVisibility]);
 
-  /** Pagination */
+  /**
+   * Pagination
+   **/
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
 
-  /** Row Pinning */
+  // 確認用: Pagination
+  useEffect(() => {
+    console.info("🟠 Pagination: ", pagination);
+  }, [pagination]);
+
+  /**
+   * Row Pinning
+   **/
   const [rowPinning, setRowPinning] = useState<RowPinningState>({
     top: [],
     bottom: [],
   });
 
-  /** Row Selection */
+  // 確認用: Pagination
+  useEffect(() => {
+    console.info("🔴 Row Pinning: ", rowPinning);
+  }, [rowPinning]);
+
+  /**
+   * Row Selection
+   **/
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [rowSelected, setRowSelected] = useState<RowSelectionState>({});
 
@@ -167,22 +181,22 @@ export default function Page() {
 
   // 確認用: RowSelection
   useEffect(() => {
-    console.group("🟢 rowSelection");
-    console.log(rowSelection);
-    console.groupEnd();
+    console.info("🟢 Row Selection: ", rowSelection);
   }, [rowSelection]);
 
-  /** Sort */
+  /**
+   * Sort
+   **/
   const [sorting, setSorting] = useState<SortingState>([]);
 
   // 確認用: Sort
   useEffect(() => {
-    console.group("🟠 sorting");
-    console.log(sorting);
-    console.groupEnd();
+    console.info("🟠 Sorting: ", sorting);
   }, [sorting]);
 
-  /** Table 作成 */
+  /**
+   * Table 作成
+   **/
   const table = useReactTable<Student>({
     data,
     columns,
