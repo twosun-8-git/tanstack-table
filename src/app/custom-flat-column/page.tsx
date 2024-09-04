@@ -251,7 +251,7 @@ export default function Page() {
     onColumnOrderChange: setColumnOrder,
 
     // Column Resize
-    enableColumnResizing: true,
+    enableColumnResizing: false,
     columnResizeMode: "onChange",
     onColumnSizingChange: setColumnSizing,
 

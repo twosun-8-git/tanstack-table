@@ -28,10 +28,6 @@ export function GridTableHeaderCell<T>({
     disabled: !isDraggable,
   });
 
-  const isPinnedColumn = header.column.getIsPinned();
-
-  const isSortedColumn = header.column.getIsSorted();
-
   const columnStyle: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
     transform: CSS.Translate.toString(transform),
@@ -41,14 +37,20 @@ export function GridTableHeaderCell<T>({
     ...style,
   };
 
+  const isPinned = header.column.getIsPinned();
+
+  const isSorted = header.column.getIsSorted();
+
+  const isResizing = header.column.getIsResizing();
+
   const contentStyle: CSSProperties = {
-    cursor: isDraggable && !isPinnedColumn ? "grab" : "default",
+    cursor: isDraggable && !isPinned ? "grab" : "default",
   };
 
   return (
     <div
       id={header.column.id}
-      className={`grid__cell ${isPinnedColumn ? "is-pinned" : ""}`}
+      className={`grid__cell ${isPinned ? "is-pinned" : ""}`}
       ref={setNodeRef}
       style={columnStyle}
     >
@@ -68,7 +70,7 @@ export function GridTableHeaderCell<T>({
           {header.column.getCanSort() && (
             <button
               type="button"
-              className={`sort ${isSortedColumn ? "is-active" : ""}`}
+              className={`sort ${isSorted ? "is-active" : ""}`}
               onClick={header.column.getToggleSortingHandler()}
             >
               {header.column.getIsSorted() === "asc" ? "⬆" : "⬇"}
@@ -81,9 +83,7 @@ export function GridTableHeaderCell<T>({
           onDoubleClick={() => header.column.resetSize()}
           onMouseDown={header.getResizeHandler()}
           onTouchStart={header.getResizeHandler()}
-          className={`resizer ${
-            header.column.getIsResizing() ? "is-resizing" : ""
-          }`}
+          className={`resizer ${isResizing ? "is-resizing" : ""}`}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();

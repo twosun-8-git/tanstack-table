@@ -11,10 +11,14 @@ const gteFilter: FilterFn<Student> = (row, columnId, filterValue) => {
 };
 
 /** Column Options（ 指定されていない場合はテーブルのオプションの値に従う ）
- * enableColumnFilter: カラムのフィルタリングの有効 / 無効
- * enableGlobalFilter: カラムのフグローバルィルタリングの有効 / 無効
- * enableHiding: カラムの表示非表示の有効 / 無効
- * enableSorting: カラムのソートの有効 / 無効
+ * enableColumnFilter: カラムのフィルタリング（ default: true）
+ * enableGlobalFilter: カラムのフグローバルフィルタリング（ default: true）
+ * enableHiding: カラムの表示・非表示機能（ default: true）
+ * enableSorting: カラムのソート（ default: true）
+ * enableMultiSort: カラムのマルチソート（ default: true）
+ * enablePinning: カラムのピン留め（ default: true）
+ * enableResizing: カラムのリサイズ（ default: true）
+ * enableGrouping: カラムのグルーピング（ default: true）
  */
 
 export const columns = [
@@ -59,7 +63,6 @@ export const columns = [
     enableHiding: false,
     enableSorting: false,
     enableResizing: false,
-    enablePinning: false,
     size: 60,
   }),
   columnHelper.display({
@@ -87,20 +90,19 @@ export const columns = [
     header: "No",
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id.toUpperCase(),
-    // enableHiding: false,
     enableResizing: false,
+    enablePinning: false,
     size: 68,
   }),
   columnHelper.display({
     id: "fullName",
-    meta: "名前",
+    meta: "フルネーム",
     header: () => <b>Full Name</b>,
     cell: (info) => {
       const { firstName, lastName } = info.row.original;
       return `${lastName} ${firstName}`;
     },
-    footer: "名前",
-    enableSorting: false,
+    footer: "フルネーム",
     size: 200,
     minSize: 100,
     maxSize: 300,

@@ -8,16 +8,13 @@ type Props<T> = {
 };
 
 export function ColumnFilter<T>({ table }: Props<T>) {
-  const { enableColumnFilters } = table.options;
-
-  if (!enableColumnFilters) return;
-
   const hanldeChangeColumnFilter = (
     e: React.ChangeEvent<HTMLSelectElement>,
     columnId: string
   ) => {
     const _value = e.target.value;
     const _column = table.getColumn(columnId);
+
     if (_column) {
       if (!_value) {
         _column.setFilterValue(undefined);

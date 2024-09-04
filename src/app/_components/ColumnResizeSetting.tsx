@@ -2,12 +2,12 @@
 
 import { ColumnResizeMode } from "@tanstack/react-table";
 
-type Props = {
+type Props<T> = {
   mode: ColumnResizeMode;
   changeMode: (value: ColumnResizeMode) => void;
 };
 
-export function ColumnResizeSetting({ mode, changeMode }: Props) {
+export function ColumnResizeSetting<T>({ mode, changeMode }: Props<T>) {
   return (
     <div className="column-controller__inner">
       <p>カラムのリサイズモード</p>
