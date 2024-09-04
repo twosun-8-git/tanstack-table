@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import {
   Row,
-  ColumnDef,
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
@@ -18,6 +17,7 @@ import {
   RowSelectionState,
   SortingState,
   VisibilityState,
+  Cell,
 } from "@tanstack/react-table";
 
 // DnD
@@ -55,7 +55,17 @@ import {
 import { getColumnPinningStyle, getRowPinningStyle } from "@/app/_utils";
 
 export default function Page() {
-  const [data, _setData] = useState(() => [...rows]);
+  const [data] = useState(() => [...rows]);
+
+  /**
+   * Global Filter
+   **/
+  const [globalFilter, setGlobalFilter] = useState("");
+
+  // 確認用: Global Filter
+  useEffect(() => {
+    console.info("🟢 Global Filters: ", globalFilter);
+  }, [globalFilter]);
 
   /**
    * Column Filter
@@ -237,11 +247,15 @@ export default function Page() {
     data,
     columns: newColumns,
     getCoreRowModel: getCoreRowModel(),
+    // globalFilterFn: "includesString",
+
+    // Global Filter
+    onGlobalFilterChange: setGlobalFilter,
 
     // Column Filter
     enableColumnFilters: true,
-    onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onColumnFiltersChange: setColumnFilters,
 
     // Column Pinning
     enableColumnPinning: true,
@@ -251,7 +265,7 @@ export default function Page() {
     onColumnOrderChange: setColumnOrder,
 
     // Column Resize
-    enableColumnResizing: false,
+    enableColumnResizing: true,
     columnResizeMode: "onChange",
     onColumnSizingChange: setColumnSizing,
 
@@ -276,14 +290,15 @@ export default function Page() {
     enableSorting: true,
     enableMultiSort: true,
     sortDescFirst: true, // ソートの実行順序（default: true[ desc -> asc ], false[ asc -> desc ]）
-    onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
+    onSortingChange: setSorting,
 
     // Visibility
     enableHiding: true,
     onColumnVisibilityChange: setColumnVisibility,
 
     state: {
+      globalFilter,
       columnFilters,
       columnPinning,
       columnOrder,
@@ -346,6 +361,14 @@ export default function Page() {
       <main>
         <div className="current">
           <span>custom</span>
+        </div>
+        <div>
+          <input
+            type="text"
+            value={globalFilter}
+            onChange={(e) => setGlobalFilter(e.target.value)}
+            placeholder="Global Search..."
+          />
         </div>
         <div className="container">
           <ColumnController
