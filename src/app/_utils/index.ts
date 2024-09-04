@@ -11,20 +11,34 @@ export function customGlobalFilterFn<T extends object>(
   // 検索文字
   const _searchValue = filterValue.toLowerCase();
 
-  // アクセサーカラムの検索
   const _cellValue = String(row.getValue(columnId)).toLowerCase();
 
+  // アクセサーカラムの検索
   if (_cellValue !== undefined) {
     if (_cellValue.includes(_searchValue)) return true;
   }
 
   const _original = row.original;
 
-  // フルネームの検索
+  // ディスプレイカラムの検索
   if ("lastName" in _original && "firstName" in _original) {
-    const _displayValue =
+    const _cellValue =
       `${_original.lastName} ${_original.firstName}`.toLowerCase();
-    if (_displayValue.includes(_searchValue)) return true;
+    if (_cellValue.includes(_searchValue)) return true;
+  }
+
+  if ("lang" in _original && "arith" in _original && "science" in _original) {
+    const _scores = [
+      _original.lang,
+      _original.arith,
+      _original.science,
+    ] as number[];
+
+    const _total = _scores.reduce((sum, score) => sum + score, 0);
+    const _average = Math.floor(_total / _scores.length);
+
+    if (String(_total).includes(_searchValue)) return true;
+    if (String(_average).includes(_searchValue)) return true;
   }
 
   return false;
