@@ -19,7 +19,6 @@ export function ColumnVisibility<T>({ table }: Props<T>) {
     (column) => column.columnDef.enableHiding === false
   );
 
-  console.log(hasNonEnableHidingColumn);
   return (
     <div className="column-controller__inner visibility">
       <p>カラムの表示</p>

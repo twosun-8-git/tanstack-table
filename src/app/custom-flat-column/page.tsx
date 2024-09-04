@@ -114,7 +114,7 @@ export default function Page() {
   // 確認用: Resize
   useEffect(() => {
     console.info("🟤 ColumnSizing: ", columnSizing);
-    console.info("🟤 Column ResizeMode: ", columnResizeMode);
+    console.info("🟤 Column ResizeMode: ", `"${columnResizeMode}"`);
   }, [columnSizing, columnResizeMode]);
 
   /**
