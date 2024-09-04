@@ -8,4 +8,9 @@ export type Student = {
   lang: number;
   arith: number;
   science: number;
+  details?: {
+    birthday: string;
+    bloodtype: string;
+    club: string;
+  };
 };
