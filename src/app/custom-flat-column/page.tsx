@@ -61,26 +61,27 @@ function customGlobalFilterFn(
   columnId: string,
   filterValue: string
 ): boolean {
-  const searchValue = filterValue.toLowerCase();
+  const _searchValue = filterValue.toLowerCase();
 
   // アクセサーカラムの検索
   const cellValue = String(row.getValue(columnId)).toLowerCase();
-  if (cellValue.includes(searchValue)) return true;
+  if (cellValue.includes(_searchValue)) return true;
+
+  const { lastName, firstName, lang, arith, science } = row.original;
 
   // フルネームの検索
-  const fullName =
-    `${row.original.lastName} ${row.original.firstName}`.toLowerCase();
-  if (fullName.includes(searchValue)) return true;
+  const _fullName = `${lastName} ${firstName}`.toLowerCase();
+  if (_fullName.includes(_searchValue)) return true;
 
   // スコアの検索
-  const scores = [row.original.lang, row.original.arith, row.original.science];
-  const total = scores.reduce((sum, score) => sum + score, 0);
-  const average = Math.floor(total / scores.length);
+  const _scores = [lang, arith, science];
+  const _total = _scores.reduce((sum, score) => sum + score, 0);
+  const _average = Math.floor(_total / _scores.length);
 
   if (
-    String(total).includes(searchValue) ||
-    String(average).includes(searchValue) ||
-    scores.some((score) => String(score).includes(searchValue))
+    String(_total).includes(_searchValue) ||
+    String(_average).includes(_searchValue) ||
+    _scores.some((score) => String(score).includes(_searchValue))
   ) {
     return true;
   }
