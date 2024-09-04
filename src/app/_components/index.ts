@@ -5,3 +5,4 @@ export { GridTableBodyRow } from "./GridTableBodyRow";
 export { GridTableBodyCell } from "./GridTableBodyCell";
 export { GridTableFooterCell } from "./GridTableFooterCell";
 export { Pagination } from "./Pagination";
+export { Search } from "./Search";

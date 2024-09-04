@@ -2,6 +2,34 @@
 import { CSSProperties } from "react";
 import { Table, Column, Row } from "@tanstack/react-table";
 
+/** Global Filter */
+export function customGlobalFilterFn<T extends object>(
+  row: Row<T>,
+  columnId: string,
+  filterValue: string
+): boolean {
+  // 検索文字
+  const _searchValue = filterValue.toLowerCase();
+
+  // アクセサーカラムの検索
+  const _cellValue = String(row.getValue(columnId)).toLowerCase();
+
+  if (_cellValue !== undefined) {
+    if (_cellValue.includes(_searchValue)) return true;
+  }
+
+  const _original = row.original;
+
+  // フルネームの検索
+  if ("lastName" in _original && "firstName" in _original) {
+    const _displayValue =
+      `${_original.lastName} ${_original.firstName}`.toLowerCase();
+    if (_displayValue.includes(_searchValue)) return true;
+  }
+
+  return false;
+}
+
 /** Column Filter Value */
 export function getColumnFilterValue<T>(column: Column<T> | undefined) {
   if (!column) return;

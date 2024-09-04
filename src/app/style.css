@@ -418,8 +418,8 @@ header p {
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   background: none;
   border: var(--border);
   color: #666;
@@ -436,7 +436,7 @@ header p {
   align-items: center;
 }
 .pagination__block.status {
-  height: 30px;
+  height: 32px;
   border-radius: 4px;
   margin-right: auto;
 }
@@ -446,7 +446,7 @@ header p {
 .pagination__block input,
 .pagination__block select {
   width: 60px;
-  height: 30px;
+  height: 32px;
   padding: 4px;
   border: var(--border);
   border-radius: 4px;
@@ -454,7 +454,35 @@ header p {
 .pagination__block select {
   cursor: pointer;
 }
-
+.search {
+  display: flex;
+  height: 32px;
+  justify-content: end;
+  gap: 8px;
+  margin-block: 8px;
+}
+.search span {
+  font-size: 14px;
+  margin-right: 8px;
+  color: #aaa;
+}
+.search input,
+.search button {
+  height: 100%;
+}
+.search input {
+  width: 160px;
+  border: var(--border);
+  border-radius: 4px;
+  padding: 4px;
+}
+.search button {
+  width: 68px;
+  padding: 4px;
+  background: var(--primaryColor);
+  color: #fff;
+  border-radius: 4px;
+}
 @media (hover: hover) {
   .resizer {
     opacity: 0;

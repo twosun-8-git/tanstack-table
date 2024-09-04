@@ -7,8 +7,6 @@ type Props<T> = {
 };
 
 export function ColumnPinned<T>({ table }: Props<T>) {
-  const columns = table.getAllColumns();
-
   // enablePinning: true または未定義のカラムのみ
   const enablePinningColumns = table
     .getAllColumns()

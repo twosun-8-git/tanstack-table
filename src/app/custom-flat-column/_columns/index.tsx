@@ -21,6 +21,8 @@ const gteFilter: FilterFn<Student> = (row, columnId, filterValue) => {
  * enableGrouping: カラムのグルーピング（ default: true）
  */
 
+/** Accessor Column だけが実データを扱っているので検索対象になる */
+
 export const columns = [
   columnHelper.display({
     id: "pin",
@@ -94,18 +96,6 @@ export const columns = [
     enablePinning: false,
     size: 68,
   }),
-  // id: fullName を Global Filterの対象にするため"lastName", "firstName" をAccessor Columnとして定義
-  // UIでは表示しないため、columnVisibility で非表示にする
-  // columnHelper.accessor("lastName", {
-  //   enableHiding: false,
-  //   enableResizing: false,
-  //   enablePinning: false,
-  // }),
-  // columnHelper.accessor("firstName", {
-  //   enableHiding: false,
-  //   enableResizing: false,
-  //   enablePinning: false,
-  // }),
   columnHelper.display({
     id: "fullName",
     meta: "フルネーム",

@@ -17,7 +17,6 @@ import {
   RowSelectionState,
   SortingState,
   VisibilityState,
-  Cell,
 } from "@tanstack/react-table";
 
 // DnD
@@ -50,9 +49,14 @@ import {
   GridTableFooterCell,
   GridTableHeaderCell,
   Pagination,
+  Search,
 } from "@/app/_components";
 
-import { getColumnPinningStyle, getRowPinningStyle } from "@/app/_utils";
+import {
+  customGlobalFilterFn,
+  getColumnPinningStyle,
+  getRowPinningStyle,
+} from "@/app/_utils";
 
 export default function Page() {
   const [data] = useState(() => [...rows]);
@@ -247,10 +251,10 @@ export default function Page() {
     data,
     columns: newColumns,
     getCoreRowModel: getCoreRowModel(),
-    // globalFilterFn: "includesString",
 
     // Global Filter
     onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: customGlobalFilterFn,
 
     // Column Filter
     enableColumnFilters: true,
@@ -362,14 +366,7 @@ export default function Page() {
         <div className="current">
           <span>custom</span>
         </div>
-        <div>
-          <input
-            type="text"
-            value={globalFilter}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Global Search..."
-          />
-        </div>
+        <Search value={globalFilter} handleChange={setGlobalFilter} />
         <div className="container">
           <ColumnController
             table={table}
