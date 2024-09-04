@@ -2,48 +2,6 @@
 import { CSSProperties } from "react";
 import { Table, Column, Row } from "@tanstack/react-table";
 
-/** Global Filter */
-export function customGlobalFilterFn<T extends object>(
-  row: Row<T>,
-  columnId: string,
-  filterValue: string
-): boolean {
-  // 検索文字
-  const _searchValue = filterValue.toLowerCase();
-
-  const _cellValue = String(row.getValue(columnId)).toLowerCase();
-
-  // アクセサーカラムの検索
-  if (_cellValue !== undefined) {
-    if (_cellValue.includes(_searchValue)) return true;
-  }
-
-  const _original = row.original;
-
-  // ディスプレイカラムの検索
-  if ("lastName" in _original && "firstName" in _original) {
-    const _cellValue =
-      `${_original.lastName} ${_original.firstName}`.toLowerCase();
-    if (_cellValue.includes(_searchValue)) return true;
-  }
-
-  if ("lang" in _original && "arith" in _original && "science" in _original) {
-    const _scores = [
-      _original.lang,
-      _original.arith,
-      _original.science,
-    ] as number[];
-
-    const _total = _scores.reduce((sum, score) => sum + score, 0);
-    const _average = Math.floor(_total / _scores.length);
-
-    if (String(_total).includes(_searchValue)) return true;
-    if (String(_average).includes(_searchValue)) return true;
-  }
-
-  return false;
-}
-
 /** Column Filter Value */
 export function getColumnFilterValue<T>(column: Column<T> | undefined) {
   if (!column) return;

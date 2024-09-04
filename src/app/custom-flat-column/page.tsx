@@ -40,8 +40,9 @@ import {
 } from "@dnd-kit/sortable";
 
 import { Student } from "@/app/_rows/type";
-import { columns } from "./_columns";
 import { rows } from "@/app/_rows";
+import { columns } from "./_columns";
+
 import {
   ColumnController,
   GridTableBodyCell,
@@ -52,11 +53,40 @@ import {
   Search,
 } from "@/app/_components";
 
-import {
-  customGlobalFilterFn,
-  getColumnPinningStyle,
-  getRowPinningStyle,
-} from "@/app/_utils";
+import { getColumnPinningStyle, getRowPinningStyle } from "@/app/_utils";
+
+/** Custom Global Filter */
+function customGlobalFilterFn(
+  row: Row<Student>,
+  columnId: string,
+  filterValue: string
+): boolean {
+  const searchValue = filterValue.toLowerCase();
+
+  // アクセサーカラムの検索
+  const cellValue = String(row.getValue(columnId)).toLowerCase();
+  if (cellValue.includes(searchValue)) return true;
+
+  // フルネームの検索
+  const fullName =
+    `${row.original.lastName} ${row.original.firstName}`.toLowerCase();
+  if (fullName.includes(searchValue)) return true;
+
+  // スコアの検索
+  const scores = [row.original.lang, row.original.arith, row.original.science];
+  const total = scores.reduce((sum, score) => sum + score, 0);
+  const average = Math.floor(total / scores.length);
+
+  if (
+    String(total).includes(searchValue) ||
+    String(average).includes(searchValue) ||
+    scores.some((score) => String(score).includes(searchValue))
+  ) {
+    return true;
+  }
+
+  return false;
+}
 
 export default function Page() {
   const [data] = useState(() => [...rows]);
