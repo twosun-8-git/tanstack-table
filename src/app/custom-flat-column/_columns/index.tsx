@@ -25,6 +25,28 @@ const gteFilter: FilterFn<Student> = (row, columnId, filterValue) => {
 
 export const columns = [
   columnHelper.display({
+    id: "expander",
+    header: () => null,
+    cell: ({ row }) =>
+      row.getCanExpand() && (
+        <div className={`expander ${row.getIsExpanded() ? "is-active" : ""}`}>
+          <button
+            type="button"
+            onClick={() => {
+              row.getToggleExpandedHandler();
+            }}
+          >
+            {row.getIsExpanded() ? "✖" : "+"}
+          </button>
+        </div>
+      ),
+    enableHiding: false,
+    enableSorting: false,
+    enablePinning: false,
+    enableResizing: false,
+    size: 48,
+  }),
+  columnHelper.display({
     id: "pin",
     header: "Pin",
     cell: ({ row }) =>
@@ -94,14 +116,14 @@ export const columns = [
     footer: (info) => info.column.id.toUpperCase(),
     enableResizing: false,
     enablePinning: false,
-    size: 68,
+    size: 60,
   }),
   columnHelper.display({
     id: "fullName",
     meta: "フルネーム",
     header: () => <b>Full Name</b>,
-    cell: (info) => {
-      const { firstName, lastName } = info.row.original;
+    cell: ({ row }) => {
+      const { firstName, lastName } = row.original;
       return `${lastName} ${firstName}`;
     },
     footer: "フルネーム",

@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Row,
   useReactTable,
   getCoreRowModel,
+  getExpandedRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
@@ -101,6 +102,11 @@ export default function Page() {
   useEffect(() => {
     console.info("🟢 Global Filters: ", globalFilter);
   }, [globalFilter]);
+
+  /**
+   * Expanding
+   **/
+  const [expanded, setExpanded] = useState({});
 
   /**
    * Column Filter
@@ -204,16 +210,25 @@ export default function Page() {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const [rowSelected, setRowSelected] = useState<RowSelectionState>({});
 
-  const handleRowClick = <T,>(row: Row<T>, isCheck: boolean = true) => {
+  const handleRowClick = <T,>(
+    row: Row<T>,
+    isCheck: boolean = false,
+    isExpander: boolean = true
+  ) => {
     // enableRowSelection の条件にマッチしていない場合は何もしない
     if (!row.getCanSelect()) return;
 
-    // Row クリックで Checkbox も連動するかを制御
+    // Checkbox も連動するかを制御
     if (isCheck) {
       setRowSelection((prev) => ({
         ...prev,
         [row.id]: !prev[row.id],
       }));
+    }
+
+    // Expender も連動するかを制御
+    if (isExpander) {
+      row.getCanExpand() && row.toggleExpanded();
     }
 
     // クリックした Row index をrowSelectedに格納(UI)
@@ -223,13 +238,17 @@ export default function Page() {
     }));
 
     // 選択した Row データ
-    console.log(row.index);
+    console.log(row);
   };
 
-  // 確認用: RowSelection
+  // 確認用: RowSelection, RowSelected
   useEffect(() => {
     console.info("🟢 Row Selection: ", rowSelection);
   }, [rowSelection]);
+
+  useEffect(() => {
+    console.info("🟣 Row Selected: ", rowSelected);
+  }, [rowSelected]);
 
   /**
    * Sort
@@ -259,12 +278,12 @@ export default function Page() {
    * enableExpanding: Row の展開機能（ default: false ）
    */
 
-  /** Column Init */
+  /** Column Init 機能とUIを合わせる */
   const isEnables = [
-    { enableRowPinning: true, id: "pin" },
+    { enableExpanding: true, id: "expander" },
     { enableRowSelection: true, id: "checkbox" },
+    { enableRowPinning: true, id: "pin" },
   ];
-
   const newColumns = columns.filter((column) => {
     // すべてのフィルタ条件をチェック
     return !isEnables.some((obj) => {
@@ -282,6 +301,12 @@ export default function Page() {
     data,
     columns: newColumns,
     getCoreRowModel: getCoreRowModel(),
+
+    // Expanding
+    enableExpanding: !isEnables.some((obj) => obj.enableExpanding === false),
+    getExpandedRowModel: getExpandedRowModel(),
+    onExpandedChange: setExpanded,
+    getRowCanExpand: (row) => row.original.details != null,
 
     // Global Filter
     onGlobalFilterChange: setGlobalFilter,
@@ -333,6 +358,7 @@ export default function Page() {
     onColumnVisibilityChange: setColumnVisibility,
 
     state: {
+      expanded,
       globalFilter,
       columnFilters,
       columnPinning,
@@ -447,20 +473,43 @@ export default function Page() {
                     ? table.getCenterRows()
                     : table.getRowModel().rows
                   ).map((row) => (
-                    <GridTableBodyRow
-                      key={row.id}
-                      row={row}
-                      rowSelected={rowSelected}
-                      handleRowClick={handleRowClick}
-                    >
-                      {row.getVisibleCells().map((cell) => (
-                        <GridTableBodyCell
-                          key={cell.id}
-                          cell={cell}
-                          style={getColumnPinningStyle(cell.column, "row")}
-                        />
-                      ))}
-                    </GridTableBodyRow>
+                    <React.Fragment key={row.id}>
+                      <GridTableBodyRow
+                        row={row}
+                        rowSelected={rowSelected}
+                        handleRowClick={handleRowClick}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <GridTableBodyCell
+                            key={cell.id}
+                            cell={cell}
+                            style={getColumnPinningStyle(cell.column, "row")}
+                          />
+                        ))}
+                      </GridTableBodyRow>
+                      {row.getIsExpanded() && row.original.details && (
+                        <div className="grid__row-sub">
+                          {row.original.details.birthday && (
+                            <dl>
+                              <dt>誕生日</dt>
+                              <dd>{row.original.details.birthday}</dd>
+                            </dl>
+                          )}
+                          {row.original.details.bloodtype && (
+                            <dl>
+                              <dt>血液型</dt>
+                              <dd>{row.original.details.bloodtype}</dd>
+                            </dl>
+                          )}
+                          {row.original.details.club && (
+                            <dl>
+                              <dt>部活動</dt>
+                              <dd>{row.original.details.club}</dd>
+                            </dl>
+                          )}
+                        </div>
+                      )}
+                    </React.Fragment>
                   ))}
                   {enableRowPinning &&
                     table.getBottomRows().map((row) => (

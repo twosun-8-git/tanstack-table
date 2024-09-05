@@ -1,3 +1,9 @@
+export type Sub = {
+  birthday: string;
+  bloodtype: string;
+  club: string;
+};
+
 export type Student = {
   no: number;
   lastName: string;
@@ -8,9 +14,5 @@ export type Student = {
   lang: number;
   arith: number;
   science: number;
-  details?: {
-    birthday: string;
-    bloodtype: string;
-    club: string;
-  };
+  details?: Sub;
 };

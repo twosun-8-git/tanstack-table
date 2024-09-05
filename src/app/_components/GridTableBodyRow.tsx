@@ -20,9 +20,7 @@ export function GridTableBodyRow<T>({
 }: Props<T>) {
   return (
     <div
-      className={`grid__row  ${
-        row.getCanSelect() ? "selectable" : "no-selectable"
-      } ${rowSelected[row.index] ? "selected" : ""}`}
+      className={`grid__row  ${rowSelected[row.index] ? "selected" : ""}`}
       onClick={() => handleRowClick(row)}
       style={style}
     >

@@ -1,4 +1,3 @@
-const a = "A";
 export const rows = [
   {
     no: 1,

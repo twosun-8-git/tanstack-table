@@ -268,12 +268,7 @@ header p {
   border-radius: 6px;
   overflow: auto;
 }
-.grid__header,
-.grid__body,
-.grid__footer {
-  display: contents;
-}
-.grid__header .grid__row {
+.grid__header {
   position: sticky;
   top: 0;
   z-index: 2;
@@ -283,14 +278,8 @@ header p {
   grid-auto-flow: column;
   justify-content: start;
 }
-.grid__row.selectable {
-  cursor: pointer;
-}
 .grid__row.selected .grid__cell {
   background: var(--secondaryColor);
-}
-.grid__row.no-selectable {
-  cursor: not-allowed;
 }
 .grid__row.no-selectable .grid__cell {
   color: #aaa;
@@ -330,13 +319,13 @@ header p {
 .grid__footer .grid__cell {
   height: 24px;
 }
-
 .grid__cell-inner {
   display: flex;
   align-items: center;
 }
 .grid__cell-content {
   display: block;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -347,7 +336,6 @@ header p {
 .grid__cell span.female {
   color: var(--red);
 }
-
 .grid__header .grid__cell button {
   display: inline-block;
   color: #fff;
@@ -362,7 +350,27 @@ header p {
   opacity: 1;
   pointer-events: auto;
 }
-
+.grid__row-sub {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+  font-size: 12px;
+  padding: 16px;
+  background: #fafffe;
+  border-top: 1px solid #eef5f3;
+}
+.grid__row-sub dl {
+  display: flex;
+  align-items: center;
+}
+.grid__row-sub dt {
+  background: #eee;
+  padding: 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 8px;
+  color: #666;
+}
 .resizer {
   position: absolute;
   right: 0;
@@ -379,12 +387,14 @@ header p {
   background: rgb(250, 97, 108);
   opacity: 1;
 }
+.expander,
 .pin {
   display: flex;
   width: 100%;
   align-items: center;
   justify-content: center;
 }
+.expander.is-active button,
 .pin__reset {
   font-size: 18px;
   color: #c8c8c8;
@@ -395,6 +405,11 @@ header p {
   color: #c8c8c8;
   padding: 2px;
   cursor: pointer;
+}
+.expander button {
+  font-size: 26px;
+  font-weight: bold;
+  color: #c8c8c8;
 }
 .pagination {
   display: flex;
@@ -493,10 +508,14 @@ header p {
   .grid__cell:hover .resizer {
     opacity: 1;
   }
+  .expander:hover button {
+    color: #000;
+  }
   .pin__top:hover,
   .pin__bottom:hover {
     color: var(--primaryColor);
   }
+  .expander.is-active:hover button,
   .pin__reset:hover {
     color: var(--red);
   }
