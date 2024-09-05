@@ -8,7 +8,7 @@ export const columns = [
   columnHelper.display({
     id: "select",
     // All Check
-    header: ({ table }) => {
+    header: () => {
       return (
         <div className="checkbox">
           <input type="checkbox" />
@@ -16,7 +16,7 @@ export const columns = [
       );
     },
     // Per Cell Check
-    cell: ({ row }) => {
+    cell: () => {
       // ここでrow.originalを使用する場合、RowDataの型チェックが適用される
       // const age = row.original.age; // OK: ageはRowDataに存在する
       // const invalid = row.original.invalid; // エラー: invalidはRowDataに存在しない
@@ -26,11 +26,13 @@ export const columns = [
         </div>
       );
     },
+    size: 50,
   }),
   columnHelper.accessor("no", {
     header: "No",
     cell: (info) => info.getValue(),
-    footer: (info) => info.column.id.toUpperCase(),
+    footer: ({ column }) => column.id.toUpperCase(),
+    size: 60,
   }),
   columnHelper.group({
     header: "Person",
@@ -39,8 +41,8 @@ export const columns = [
       columnHelper.display({
         id: "fullName",
         header: () => <b>Full Name</b>,
-        cell: (info) => {
-          const { firstName, lastName } = info.row.original;
+        cell: ({ row }) => {
+          const { firstName, lastName } = row.original;
           return `${lastName} ${firstName}`;
         },
       }),
@@ -100,8 +102,8 @@ export const columns = [
   columnHelper.display({
     id: "total",
     header: "Total",
-    cell: (info) => {
-      const { lang, arith, science } = info.row.original;
+    cell: ({ row }) => {
+      const { lang, arith, science } = row.original;
       const _sum = lang + arith + science;
       return `${_sum} 点`;
     },
@@ -110,8 +112,8 @@ export const columns = [
   columnHelper.display({
     id: "average",
     header: "Average",
-    cell: (info) => {
-      const { lang, arith, science } = info.row.original;
+    cell: ({ row }) => {
+      const { lang, arith, science } = row.original;
       const _average = Math.floor((lang + arith + science) / 3);
       return `${_average} 点`;
     },
