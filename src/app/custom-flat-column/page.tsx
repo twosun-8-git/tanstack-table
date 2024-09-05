@@ -91,8 +91,6 @@ function customGlobalFilterFn(
 }
 
 export default function Page() {
-  const [data] = useState(() => [...rows]);
-
   /**
    * Global Filter
    **/
@@ -260,31 +258,13 @@ export default function Page() {
     console.info("🟠 Sorting: ", sorting);
   }, [sorting]);
 
-  /**
-   * Table 作成
-   *
-   * Table Options（ カラム個別の指定がある場合はそれが優先される ）
-   * enableColumnFilters: カラムのフィルタリング UI の表示（ default: false ）
-   * enableGlobalFilter: カラムのフグローバルィルタリング（ default: false ）
-   * enableFilters: カラムのフィルタリング機能（ default: false ）
-   * enableGrouping: カラムのグルーピング（ default: false ）
-   * enableColumnResizing: カラムのリサイズ（ default: false ）
-   * enableHiding: カラムの表示・非表示（ default: false ）
-   * enableSorting: カラムのソート（ default: false ）
-   * enableMultiSort: 複数のカラムのソート（ default: false ）
-   * enableRowSelection: Row の選択（ default: false ）
-   * enableMultiRowSelection: 複数の Row の選択（ default: true ）
-   * enableSubRowSelection: カラムのソート（ default: true ）
-   * enableExpanding: Row の展開機能（ default: false ）
-   */
-
   /** Column Init: 機能とUIを合わせる */
   const isEnables = [
     { enableExpanding: true, id: "expander" },
     { enableRowSelection: true, id: "checkbox" },
     { enableRowPinning: true, id: "pin" },
   ];
-  const newColumns = columns.filter((column) => {
+  const defaultColumns = columns.filter((column) => {
     // すべてのフィルタ条件をチェック
     return !isEnables.some((obj) => {
       // フィルタの条件が false で、かつ column.id が一致する場合、
@@ -298,8 +278,8 @@ export default function Page() {
 
   /** Table Init */
   const table = useReactTable<Student>({
-    data,
-    columns: newColumns,
+    data: rows,
+    columns: defaultColumns,
     getCoreRowModel: getCoreRowModel(),
 
     // Expanding
@@ -334,9 +314,9 @@ export default function Page() {
     onPaginationChange: setPagination,
 
     // Row Pinning（矛盾）
-    enableRowPinning: !isEnables.some((obj) => obj.enableRowPinning === false),
+    enableRowPinning: !isEnables.some((obj) => obj.enableRowPinning === false), // Rowのピン留め（上下）（ default: false ）
     onRowPinningChange: setRowPinning,
-    keepPinnedRows: true, // ピン留めされた行をページネーションやフィルタリング時に保持する
+    keepPinnedRows: true,
 
     // Row Selection
     enableRowSelection: !isEnables.some(
@@ -349,7 +329,7 @@ export default function Page() {
     // Sort
     enableSorting: true,
     enableMultiSort: true,
-    sortDescFirst: true, // ソートの実行順序（default: true[ desc -> asc ], false[ asc -> desc ]）
+    sortDescFirst: true,
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
 
