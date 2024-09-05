@@ -273,12 +273,12 @@ header p {
   top: 0;
   z-index: 2;
 }
-.grid__row {
+.grid__row-content {
   display: grid;
   grid-auto-flow: column;
   justify-content: start;
 }
-.grid__row.selected .grid__cell {
+.grid__row.is-selected .grid__cell {
   background: var(--secondaryColor);
 }
 .grid__row.no-selectable .grid__cell {
@@ -352,12 +352,20 @@ header p {
 }
 .grid__row-sub {
   display: flex;
+  height: 0;
   flex-direction: row;
   gap: 24px;
   font-size: 12px;
-  padding: 16px;
+  padding-inline: 16px;
   background: #fafffe;
   border-top: 1px solid #eef5f3;
+  opacity: 0;
+  transition: all 0.2s linear;
+  overflow: hidden;
+}
+.grid__row.is-expanded .grid__row-sub {
+  height: 58px;
+  opacity: 1;
 }
 .grid__row-sub dl {
   display: flex;

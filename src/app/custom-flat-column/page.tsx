@@ -278,7 +278,7 @@ export default function Page() {
    * enableExpanding: Row の展開機能（ default: false ）
    */
 
-  /** Column Init 機能とUIを合わせる */
+  /** Column Init: 機能とUIを合わせる */
   const isEnables = [
     { enableExpanding: true, id: "expander" },
     { enableRowSelection: true, id: "checkbox" },
@@ -439,14 +439,18 @@ export default function Page() {
                 <div className="grid__header">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <div key={headerGroup.id} className="grid__row">
-                      {headerGroup.headers.map((header) => (
-                        <GridTableHeaderCell
-                          key={header.id}
-                          header={header}
-                          style={getColumnPinningStyle(header.column)}
-                          isDraggable={!nonDraggableColumns.includes(header.id)}
-                        />
-                      ))}
+                      <div className="grid__row-content">
+                        {headerGroup.headers.map((header) => (
+                          <GridTableHeaderCell
+                            key={header.id}
+                            header={header}
+                            style={getColumnPinningStyle(header.column)}
+                            isDraggable={
+                              !nonDraggableColumns.includes(header.id)
+                            }
+                          />
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -473,43 +477,20 @@ export default function Page() {
                     ? table.getCenterRows()
                     : table.getRowModel().rows
                   ).map((row) => (
-                    <React.Fragment key={row.id}>
-                      <GridTableBodyRow
-                        row={row}
-                        rowSelected={rowSelected}
-                        handleRowClick={handleRowClick}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <GridTableBodyCell
-                            key={cell.id}
-                            cell={cell}
-                            style={getColumnPinningStyle(cell.column, "row")}
-                          />
-                        ))}
-                      </GridTableBodyRow>
-                      {row.getIsExpanded() && row.original.details && (
-                        <div className="grid__row-sub">
-                          {row.original.details.birthday && (
-                            <dl>
-                              <dt>誕生日</dt>
-                              <dd>{row.original.details.birthday}</dd>
-                            </dl>
-                          )}
-                          {row.original.details.bloodtype && (
-                            <dl>
-                              <dt>血液型</dt>
-                              <dd>{row.original.details.bloodtype}</dd>
-                            </dl>
-                          )}
-                          {row.original.details.club && (
-                            <dl>
-                              <dt>部活動</dt>
-                              <dd>{row.original.details.club}</dd>
-                            </dl>
-                          )}
-                        </div>
-                      )}
-                    </React.Fragment>
+                    <GridTableBodyRow
+                      key={row.id}
+                      row={row}
+                      rowSelected={rowSelected}
+                      handleRowClick={handleRowClick}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <GridTableBodyCell
+                          key={cell.id}
+                          cell={cell}
+                          style={getColumnPinningStyle(cell.column, "row")}
+                        />
+                      ))}
+                    </GridTableBodyRow>
                   ))}
                   {enableRowPinning &&
                     table.getBottomRows().map((row) => (
@@ -533,9 +514,14 @@ export default function Page() {
                 <div className="grid__footer">
                   {table.getFooterGroups().map((footerGroup) => (
                     <div key={footerGroup.id} className="grid__row">
-                      {footerGroup.headers.map((header) => (
-                        <GridTableFooterCell key={header.id} header={header} />
-                      ))}
+                      <div className="grid__row-content">
+                        {footerGroup.headers.map((header) => (
+                          <GridTableFooterCell
+                            key={header.id}
+                            header={header}
+                          />
+                        ))}
+                      </div>
                     </div>
                   ))}
                 </div>
