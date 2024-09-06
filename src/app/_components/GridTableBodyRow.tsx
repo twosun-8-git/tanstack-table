@@ -1,12 +1,12 @@
 "use client";
 
 import { CSSProperties } from "react";
-import { Row, RowSelectionState } from "@tanstack/react-table";
+import { Row, RowData } from "@tanstack/react-table";
 import { Student } from "@/app/_rows/type";
 
 type Props<T extends Student> = {
   row: Row<T>;
-  rowSelected: RowSelectionState;
+  // rowSelected?: RowData;
   handleRowClick: (row: Row<T>) => void;
   style?: CSSProperties;
   children: React.ReactNode;
@@ -14,7 +14,7 @@ type Props<T extends Student> = {
 
 export function GridTableBodyRow<T extends Student>({
   row,
-  rowSelected,
+  // rowSelected,
   handleRowClick,
   style,
   children,
@@ -23,9 +23,7 @@ export function GridTableBodyRow<T extends Student>({
 
   return (
     <div
-      className={`grid__row  ${rowSelected[row.index] ? "is-selected" : ""} ${
-        row.getIsExpanded() ? "is-expanded" : ""
-      }`}
+      className={`grid__row  ${row.getIsExpanded() ? "is-expanded" : ""}`}
       onClick={() => handleRowClick(row)}
       style={style}
     >

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Row,
+  RowData,
   useReactTable,
   getCoreRowModel,
   getExpandedRowModel,
@@ -206,9 +207,9 @@ export default function Page() {
    * Row Selection
    **/
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [rowSelected, setRowSelected] = useState<RowSelectionState>({});
+  const [rowSelected, setRowSelected] = useState<RowData[]>([]);
 
-  const handleRowClick = <T,>(
+  const handleRowClick = <T extends Student>(
     row: Row<T>,
     isCheck: boolean = false,
     isExpander: boolean = true
@@ -230,13 +231,17 @@ export default function Page() {
     }
 
     // クリックした Row index をrowSelectedに格納(UI)
-    setRowSelected((prev) => ({
-      ...prev,
-      [row.id]: !prev[row.id],
-    }));
 
-    // 選択した Row データ
-    console.log(row);
+    // const _rowIndex = row.index;
+    // const _rowData = row.original;
+    // setRowSelected((prev: RowData[]) => {
+    //   const _index = prev.findIndex((r: any) => r.no === _rowData.no);
+    //   if (_index > -1) {
+    //     return prev.filter((_, i) => i !== _index);
+    //   } else {
+    //     return [...prev, { ..._rowData, index: _rowIndex }];
+    //   }
+    // });
   };
 
   // 確認用: RowSelection, RowSelected
@@ -440,7 +445,7 @@ export default function Page() {
                       <GridTableBodyRow
                         key={row.id}
                         row={row}
-                        rowSelected={rowSelected}
+                        // rowSelected={rowSelected}
                         handleRowClick={handleRowClick}
                         style={getRowPinningStyle(row, table)}
                       >
@@ -460,7 +465,7 @@ export default function Page() {
                     <GridTableBodyRow
                       key={row.id}
                       row={row}
-                      rowSelected={rowSelected}
+                      // rowSelected={rowSelected}
                       handleRowClick={handleRowClick}
                     >
                       {row.getVisibleCells().map((cell) => (
@@ -477,7 +482,7 @@ export default function Page() {
                       <GridTableBodyRow
                         key={row.id}
                         row={row}
-                        rowSelected={rowSelected}
+                        // rowSelected={rowSelected}
                         handleRowClick={handleRowClick}
                         style={getRowPinningStyle(row, table)}
                       >
