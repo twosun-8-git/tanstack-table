@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import {
   Row,
-  RowData,
   useReactTable,
   getCoreRowModel,
   getExpandedRowModel,
@@ -207,7 +206,17 @@ export default function Page() {
    * Row Selection
    **/
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [rowSelected, setRowSelected] = useState<RowData[]>([]);
+  const [rowSelected, setRowSelected] = useState<Student[]>([]);
+
+  const toggleRowSelected = (row: Student) => {
+    setRowSelected((prevRows) => {
+      if (prevRows.some((r) => r.no === row.no)) {
+        return prevRows.filter((r) => r.no !== row.no);
+      } else {
+        return [...prevRows, row];
+      }
+    });
+  };
 
   const handleRowClick = <T extends Student>(
     row: Row<T>,
@@ -216,6 +225,9 @@ export default function Page() {
   ) => {
     // enableRowSelection の条件にマッチしていない場合は何もしない
     if (!row.getCanSelect()) return;
+
+    // 選択した Row のデータを取得
+    toggleRowSelected(row.original);
 
     // Checkbox も連動するかを制御
     if (isCheck) {
@@ -229,19 +241,6 @@ export default function Page() {
     if (isExpander) {
       row.getCanExpand() && row.toggleExpanded();
     }
-
-    // クリックした Row index をrowSelectedに格納(UI)
-
-    // const _rowIndex = row.index;
-    // const _rowData = row.original;
-    // setRowSelected((prev: RowData[]) => {
-    //   const _index = prev.findIndex((r: any) => r.no === _rowData.no);
-    //   if (_index > -1) {
-    //     return prev.filter((_, i) => i !== _index);
-    //   } else {
-    //     return [...prev, { ..._rowData, index: _rowIndex }];
-    //   }
-    // });
   };
 
   // 確認用: RowSelection, RowSelected
@@ -445,7 +444,7 @@ export default function Page() {
                       <GridTableBodyRow
                         key={row.id}
                         row={row}
-                        // rowSelected={rowSelected}
+                        rowSelected={rowSelected}
                         handleRowClick={handleRowClick}
                         style={getRowPinningStyle(row, table)}
                       >
@@ -465,7 +464,7 @@ export default function Page() {
                     <GridTableBodyRow
                       key={row.id}
                       row={row}
-                      // rowSelected={rowSelected}
+                      rowSelected={rowSelected}
                       handleRowClick={handleRowClick}
                     >
                       {row.getVisibleCells().map((cell) => (
@@ -482,7 +481,7 @@ export default function Page() {
                       <GridTableBodyRow
                         key={row.id}
                         row={row}
-                        // rowSelected={rowSelected}
+                        rowSelected={rowSelected}
                         handleRowClick={handleRowClick}
                         style={getRowPinningStyle(row, table)}
                       >

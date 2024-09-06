@@ -6,24 +6,28 @@ import { Student } from "@/app/_rows/type";
 
 type Props<T extends Student> = {
   row: Row<T>;
-  // rowSelected?: RowData;
-  handleRowClick: (row: Row<T>) => void;
+  rowSelected: Student[];
+  handleRowClick: (row: any) => void;
   style?: CSSProperties;
   children: React.ReactNode;
 };
 
 export function GridTableBodyRow<T extends Student>({
   row,
-  // rowSelected,
+  rowSelected,
   handleRowClick,
   style,
   children,
 }: Props<T>) {
-  const { details } = row.original;
+  const { no, details } = row.original;
+
+  const isSelected = rowSelected.some((r) => r.no === no);
 
   return (
     <div
-      className={`grid__row  ${row.getIsExpanded() ? "is-expanded" : ""}`}
+      className={`grid__row ${isSelected ? "is-selected" : ""} ${
+        row.getIsExpanded() ? "is-expanded" : ""
+      }`}
       onClick={() => handleRowClick(row)}
       style={style}
     >
