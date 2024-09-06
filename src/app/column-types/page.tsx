@@ -72,7 +72,7 @@ export default function Page() {
                   <div
                     key={header.id}
                     className="grid__cell"
-                    style={{ width: header.column.getSize() }}
+                    style={{ width: header.getSize() }}
                   >
                     {header.isPlaceholder
                       ? null

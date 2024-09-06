@@ -313,7 +313,6 @@ header p {
 }
 .grid__footer {
   font-size: 12px;
-  padding-block: 8px;
   color: #aaa;
 }
 .grid__footer .grid__cell {
