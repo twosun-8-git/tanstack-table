@@ -267,6 +267,18 @@ header p {
 .column-controller + .contents .grid {
   max-height: calc(15 * var(--rowHeight) + var(--columnHeight));
 }
+.no-data .grid {
+  padding: 24px 20px;
+}
+.no-data__title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--primaryColor);
+}
+.no-data__message {
+  color: #aaa;
+  margin-top: 16px;
+}
 .grid {
   height: fit-content;
   max-height: 100vh;
