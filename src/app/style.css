@@ -540,6 +540,7 @@ header p {
   }
   .expander.is-active:hover button,
   .pin__reset:hover {
+    color: var(--red);
     opacity: 1;
   }
 }
