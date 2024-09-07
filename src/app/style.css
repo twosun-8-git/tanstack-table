@@ -169,7 +169,7 @@ header p {
   color: #aaa;
   font-style: italic;
   border-radius: 100px;
-  padding: 8px 16px;
+  padding: 6px 12px;
 }
 .nav {
   border: var(--border);
