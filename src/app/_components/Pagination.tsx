@@ -24,12 +24,12 @@ export function Pagination<T>({ table }: Props<T>) {
           </span>
         </div>
         <div>
-          <span>
-            （&nbsp;{rowLength} 件中&nbsp;
+          <span className="pagination__count">
+            {rowLength} 件中&nbsp;
             {pageIndex * pageSize + 1}
             &nbsp;-&nbsp;
             {Math.min((pageIndex + 1) * pageSize, rowLength)}
-            &nbsp;件を表示&nbsp;）
+            &nbsp;件を表示
           </span>
         </div>
       </div>

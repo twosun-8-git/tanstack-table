@@ -23,12 +23,16 @@ export function ColumnController({ table, mode, changeMode }: Props) {
 
   return (
     <div className="column-controller">
-      {enableHiding && <ColumnVisibility table={table} />}
-      {enableColumnFilters && <ColumnFilter table={table} />}
-      {enableColumnPinning && <ColumnPinned table={table} />}
-      {enableColumnResizing && (
-        <ColumnResizeSetting mode={mode} changeMode={changeMode} />
-      )}
+      <div className="column-controller__group">
+        {enableHiding && <ColumnVisibility table={table} />}
+        {enableColumnFilters && <ColumnFilter table={table} />}
+      </div>
+      <div className="column-controller__group">
+        {enableColumnPinning && <ColumnPinned table={table} />}
+        {enableColumnResizing && (
+          <ColumnResizeSetting mode={mode} changeMode={changeMode} />
+        )}
+      </div>
     </div>
   );
 }

@@ -5,7 +5,7 @@
   --secondaryColor: #eef6f5;
   --blue: rgb(0, 117, 255);
   --red: rgb(237, 102, 102);
-  --controllerWidth: 220px;
+  --controllerWidth: 380px;
   --gap: 36px;
   --border: 1px solid var(--grayLight);
   --columnHeight: 40px;
@@ -133,7 +133,7 @@ button {
   padding: 0;
 }
 .wrapper {
-  width: min(1024px, 100%);
+  width: min(1080px, 100%);
   height: 100vh;
   margin-inline: auto;
   background: #fff;
@@ -200,8 +200,14 @@ header p {
   position: relative;
 }
 .column-controller {
+  display: flex;
   width: var(--controllerWidth);
   flex-shrink: 0;
+  gap: 8px;
+}
+.column-controller__group {
+  flex-shrink: 0;
+  width: calc(var(--controllerWidth) / 2);
 }
 .column-controller__inner {
   font-size: 12px;
@@ -210,7 +216,7 @@ header p {
   overflow: hidden;
 }
 .column-controller__inner + .column-controller__inner {
-  margin-top: 16px;
+  margin-top: 8px;
 }
 .column-controller__inner > p {
   background: var(--primaryColor);
@@ -243,7 +249,8 @@ header p {
 .column-controller__inner.visibility label:has(input[type="checkbox"]) {
   width: fit-content;
 }
-.column-controller__inner label > span {
+.column-controller__inner label > span,
+.column-controller__inner.pinned li > span {
   font-size: 12px;
   color: #aaa;
 }
@@ -421,7 +428,7 @@ header p {
 }
 .pagination {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: flex-end;
   font-size: 12px;
   gap: 16px;
@@ -459,9 +466,13 @@ header p {
   align-items: center;
 }
 .pagination__block.status {
-  height: 32px;
-  border-radius: 4px;
+  flex-direction: column;
+  align-items: start;
   margin-right: auto;
+  gap: 6px;
+}
+.pagination__count {
+  font-size: 10px;
 }
 .pagination__block > span {
   margin-right: 6px;

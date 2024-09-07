@@ -186,7 +186,7 @@ export default function Page() {
    **/
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
-    pageSize: 20,
+    pageSize: 10,
   });
 
   // 確認用: Pagination
@@ -290,7 +290,7 @@ export default function Page() {
 
     // Column Resize
     enableColumnResizing: true,
-    columnResizeMode: "onChange",
+    columnResizeMode,
     onColumnSizingChange: setColumnSizing,
 
     // Pagination
