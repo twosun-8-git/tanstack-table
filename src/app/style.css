@@ -404,7 +404,8 @@ header p {
 .expander.is-active button,
 .pin__reset {
   font-size: 18px;
-  color: #c8c8c8;
+  color: var(--red);
+  opacity: 0.5;
 }
 .pin__top,
 .pin__bottom {
@@ -524,6 +525,6 @@ header p {
   }
   .expander.is-active:hover button,
   .pin__reset:hover {
-    color: var(--red);
+    opacity: 1;
   }
 }

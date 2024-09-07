@@ -32,8 +32,9 @@ export const columns = [
         <div className={`expander ${row.getIsExpanded() ? "is-active" : ""}`}>
           <button
             type="button"
-            onClick={() => {
-              row.getToggleExpandedHandler();
+            onClick={(e) => {
+              e.stopPropagation();
+              row.toggleExpanded();
             }}
           >
             {row.getIsExpanded() ? "✖" : "+"}

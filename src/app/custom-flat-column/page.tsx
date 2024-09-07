@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Row,
   useReactTable,
@@ -105,6 +105,11 @@ export default function Page() {
    * Expanding
    **/
   const [expanded, setExpanded] = useState({});
+
+  // 確認用: expanded
+  useEffect(() => {
+    console.info("🟤 Expanded: ", expanded);
+  }, [expanded]);
 
   /**
    * Column Filter
@@ -216,31 +221,6 @@ export default function Page() {
         return [...prevRows, row];
       }
     });
-  };
-
-  const handleRowClick = <T extends Student>(
-    row: Row<T>,
-    isCheck: boolean = false,
-    isExpander: boolean = true
-  ) => {
-    // enableRowSelection の条件にマッチしていない場合は何もしない
-    if (!row.getCanSelect()) return;
-
-    // 選択した Row のデータを取得
-    toggleRowSelected(row.original);
-
-    // Checkbox も連動するかを制御
-    if (isCheck) {
-      setRowSelection((prev) => ({
-        ...prev,
-        [row.id]: !prev[row.id],
-      }));
-    }
-
-    // Expender も連動するかを制御
-    if (isExpander) {
-      row.getCanExpand() && row.toggleExpanded();
-    }
   };
 
   // 確認用: RowSelection, RowSelected
@@ -444,8 +424,6 @@ export default function Page() {
                       <GridTableBodyRow
                         key={row.id}
                         row={row}
-                        rowSelected={rowSelected}
-                        handleRowClick={handleRowClick}
                         style={getRowPinningStyle(row, table)}
                       >
                         {row.getVisibleCells().map((cell) => (
@@ -461,12 +439,7 @@ export default function Page() {
                     ? table.getCenterRows()
                     : table.getRowModel().rows
                   ).map((row) => (
-                    <GridTableBodyRow
-                      key={row.id}
-                      row={row}
-                      rowSelected={rowSelected}
-                      handleRowClick={handleRowClick}
-                    >
+                    <GridTableBodyRow key={row.id} row={row}>
                       {row.getVisibleCells().map((cell) => (
                         <GridTableBodyCell
                           key={cell.id}
@@ -481,8 +454,6 @@ export default function Page() {
                       <GridTableBodyRow
                         key={row.id}
                         row={row}
-                        rowSelected={rowSelected}
-                        handleRowClick={handleRowClick}
                         style={getRowPinningStyle(row, table)}
                       >
                         {row.getVisibleCells().map((cell) => (
