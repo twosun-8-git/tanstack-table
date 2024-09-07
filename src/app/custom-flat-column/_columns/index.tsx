@@ -117,7 +117,7 @@ export const columns = [
     footer: (info) => info.column.id.toUpperCase(),
     enableResizing: false,
     enablePinning: false,
-    size: 60,
+    size: 66,
   }),
   columnHelper.display({
     id: "fullName",
@@ -143,8 +143,8 @@ export const columns = [
     footer: "性別",
     filterFn: "equals",
     enableSorting: false,
-    size: 120,
-    minSize: 100,
+    size: 100,
+    minSize: 50,
     maxSize: 120,
   }),
   columnHelper.accessor("grade", {
@@ -153,8 +153,8 @@ export const columns = [
     cell: (info) => `${info.getValue()} 年`,
     footer: "学年",
     filterFn: "equals",
-    size: 120,
-    minSize: 100,
+    size: 100,
+    minSize: 50,
     maxSize: 120,
   }),
   columnHelper.accessor("class", {
@@ -164,8 +164,8 @@ export const columns = [
     footer: "組",
     filterFn: "equals",
     enablePinning: false,
-    size: 120,
-    minSize: 100,
+    size: 100,
+    minSize: 50,
     maxSize: 120,
   }),
   columnHelper.accessor("lang", {

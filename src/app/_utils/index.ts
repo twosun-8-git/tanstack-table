@@ -31,7 +31,7 @@ export function getColumnPinningStyle<T>(
       ? { left: `${column.getStart("left")}px` }
       : {}),
     ...(_isColumnPinned === "right"
-      ? { left: `${column.getAfter("right")}px` }
+      ? { right: `${column.getAfter("right")}px` }
       : {}),
   };
 }
