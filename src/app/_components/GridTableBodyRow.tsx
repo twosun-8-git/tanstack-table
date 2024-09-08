@@ -17,9 +17,17 @@ export function GridTableBodyRow<T extends Student>({
 }: Props<T>) {
   const { details } = row.original;
 
+  const isSelected = row.getIsSelected() ? "is-selected" : "";
+  const isExpanded = row.getIsExpanded() ? "is-expanded" : "";
+
+  const handleRowClick = () => {
+    row.toggleSelected();
+  };
+
   return (
     <div
-      className={`grid__row ${row.getIsExpanded() ? "is-expanded" : ""}`}
+      className={`grid__row ${isSelected} ${isExpanded}`}
+      onClick={handleRowClick}
       style={style}
     >
       <div className="grid__row-content">{children}</div>

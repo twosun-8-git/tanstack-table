@@ -211,26 +211,11 @@ export default function Page() {
    * Row Selection
    **/
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [rowSelected, setRowSelected] = useState<Student[]>([]);
-
-  const toggleRowSelected = (row: Student) => {
-    setRowSelected((prevRows) => {
-      if (prevRows.some((r) => r.no === row.no)) {
-        return prevRows.filter((r) => r.no !== row.no);
-      } else {
-        return [...prevRows, row];
-      }
-    });
-  };
 
   // 確認用: RowSelection, RowSelected
   useEffect(() => {
     console.info("🟢 Row Selection: ", rowSelection);
   }, [rowSelection]);
-
-  useEffect(() => {
-    console.info("🟣 Row Selected: ", rowSelected);
-  }, [rowSelected]);
 
   /**
    * Sort
