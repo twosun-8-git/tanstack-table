@@ -10,7 +10,7 @@ type Props<T extends Student> = {
   children: React.ReactNode;
 };
 
-export function GridTableBodyRow<T extends Student>({
+export function GridBodyRow<T extends Student>({
   row,
   style,
   children,

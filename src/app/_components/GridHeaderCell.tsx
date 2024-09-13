@@ -11,7 +11,7 @@ type Props<T> = {
   isDraggable?: boolean;
 };
 
-export function GridTableHeaderCell<T>({
+export function GridHeaderCell<T>({
   header,
   style,
   isDraggable = true,
