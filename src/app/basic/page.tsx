@@ -6,11 +6,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { Student } from "@/app/_rows/type";
 import { columns } from "./_columns";
 import { rows } from "@/app/_rows";
 
 export default function Page() {
-  const table = useReactTable({
+  const table = useReactTable<Student>({
     data: rows,
     columns,
     getCoreRowModel: getCoreRowModel(),
@@ -71,7 +72,7 @@ export default function Page() {
                   <div
                     key={header.id}
                     className="grid__cell"
-                    style={{ width: header.column.getSize() }}
+                    style={{ width: header.getSize() }}
                   >
                     {header.isPlaceholder
                       ? null

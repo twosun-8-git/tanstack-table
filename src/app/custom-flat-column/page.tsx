@@ -212,7 +212,7 @@ export default function Page() {
    **/
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  // 確認用: RowSelection, RowSelected
+  // 確認用: RowSelection
   useEffect(() => {
     console.info("🟢 Row Selection: ", rowSelection);
   }, [rowSelection]);
@@ -282,7 +282,7 @@ export default function Page() {
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
 
-    // Row Pinning（矛盾）
+    // Row Pinning
     enableRowPinning: !isEnables.some((obj) => obj.enableRowPinning === false), // Rowのピン留め（上下）（ default: false ）
     onRowPinningChange: setRowPinning,
     keepPinnedRows: true,
