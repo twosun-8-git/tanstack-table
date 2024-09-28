@@ -18,7 +18,14 @@
   line-height: 1;
 }
 .loader {
-  width: 50px;
+  display: flex;
+  width: 100%;
+  height: calc(12 * var(--columnHeight));
+  justify-content: center;
+  align-items: center;
+}
+.loading {
+  width: 100px;
   aspect-ratio: 1;
   border-radius: 50%;
   border: 8px solid var(--blue);
@@ -142,6 +149,7 @@ header {
   display: flex;
   align-items: center;
   padding-block: 24px 12px;
+  opacity: 0;
 }
 header h1 a {
   text-decoration: none;
@@ -189,7 +197,7 @@ header p {
   line-height: 1.5;
 }
 .nav dt {
-  width: 200px;
+  width: 228px;
   flex-shrink: 0;
 }
 .nav dd {
@@ -264,9 +272,6 @@ header p {
   width: calc(100% - (var(--controllerWidth) + var(--gap)));
   margin-left: var(--gap);
 }
-.column-controller + .contents .grid {
-  max-height: calc(15 * var(--rowHeight) + var(--columnHeight));
-}
 .no-data .grid {
   padding: 24px 20px;
 }
@@ -285,13 +290,17 @@ header p {
   border: var(--border);
   font-size: 14px;
   border-radius: 6px;
-  overflow: auto;
+  overflow-x: auto;
 }
 .grid__header {
   position: sticky;
   top: 0;
   width: fit-content;
   z-index: 2;
+}
+.grid__body {
+  max-height: calc(15 * var(--rowHeight) + var(--columnHeight));
+  overflow: scroll;
 }
 .grid__body,
 .grid__row {
@@ -486,6 +495,7 @@ header p {
 }
 .pagination__block.status {
   margin-right: auto;
+  gap: 8px;
 }
 .pagination__count {
   font-size: 10px;

@@ -8,7 +8,7 @@ type Props<T> = {
 
 export function Pagination<T>({ table }: Props<T>) {
   const pageCount = table.getPageCount();
-  const rowLength = table.getFilteredRowModel().rows.length;
+  const rowLength = table.getRowCount();
   const { pageIndex, pageSize } = table.getState().pagination;
 
   return (

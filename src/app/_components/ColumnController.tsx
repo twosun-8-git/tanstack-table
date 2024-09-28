@@ -1,37 +1,29 @@
 "use client";
 
-import { Table, ColumnResizeMode } from "@tanstack/react-table";
+import { Table } from "@tanstack/react-table";
 
 import { Student } from "@/app/_rows/type";
+
 import { ColumnVisibility } from "./ColumnVisibility";
-import { ColumnFilter } from "./ColumnFilter";
-import { ColumnPinned } from "./ColumnPinned";
-import { ColumnResizeSetting } from "./ColumnResizeSetting";
+import { ColumnFiltering } from "./ColumnFiltering";
+import { ColumnPinning } from "./ColumnPinning";
 
 type Props = {
   table: Table<Student>;
-  mode: ColumnResizeMode;
-  changeMode: (value: ColumnResizeMode) => void;
 };
-export function ColumnController({ table, mode, changeMode }: Props) {
-  const {
-    enableColumnFilters,
-    enableColumnPinning,
-    enableColumnResizing,
-    enableHiding,
-  } = table.options;
+
+export function ColumnController({ table }: Props) {
+  const { enableHiding, enableColumnFilters, enableColumnPinning } =
+    table.options;
 
   return (
     <div className="column-controller">
       <div className="column-controller__group">
         {enableHiding && <ColumnVisibility table={table} />}
-        {enableColumnFilters && <ColumnFilter table={table} />}
+        {enableColumnFilters && <ColumnFiltering table={table} />}
       </div>
       <div className="column-controller__group">
-        {enableColumnPinning && <ColumnPinned table={table} />}
-        {enableColumnResizing && (
-          <ColumnResizeSetting mode={mode} changeMode={changeMode} />
-        )}
+        {enableColumnPinning && <ColumnPinning table={table} />}
       </div>
     </div>
   );

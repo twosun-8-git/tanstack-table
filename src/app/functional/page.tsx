@@ -1,23 +1,22 @@
 "use client";
+import React, { useEffect, useState } from "react";
 
-import { useEffect, useState } from "react";
 import {
   Row,
-  useReactTable,
   getCoreRowModel,
   getExpandedRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
-  ColumnResizeMode,
+  getPaginationRowModel,
+  RowPinningState,
+  RowSelectionState,
   ColumnFiltersState,
   ColumnPinningState,
   ColumnSizingState,
-  PaginationState,
-  RowPinningState,
-  RowSelectionState,
-  SortingState,
   VisibilityState,
+  SortingState,
+  PaginationState,
+  useReactTable,
 } from "@tanstack/react-table";
 
 // DnD
@@ -41,20 +40,26 @@ import {
 } from "@dnd-kit/sortable";
 
 import { Student } from "@/app/_rows/type";
-import { rows } from "@/app/_rows";
 import { columns } from "./_columns";
+import { rows } from "@/app/_rows";
 
 import {
+  getColumnPinningStyle,
+  getRowPinningStyle,
+  joinString,
+  Sum,
+  Average,
+} from "@/app/_utils";
+
+import {
+  GridHeaderCell,
+  GridFooterCell,
+  GridBodyRow,
+  GridBodyCell,
   ColumnController,
-  GridTableBodyCell,
-  GridTableBodyRow,
-  GridTableFooterCell,
-  GridTableHeaderCell,
   Pagination,
   Search,
 } from "@/app/_components";
-
-import { getColumnPinningStyle, getRowPinningStyle } from "@/app/_utils";
 
 /** Custom Global Filter */
 function customGlobalFilterFn(
@@ -64,25 +69,22 @@ function customGlobalFilterFn(
 ): boolean {
   const _searchValue = filterValue.toLowerCase();
 
-  // アクセサーカラムの検索
+  // Accessor Column の検索
   const cellValue = String(row.getValue(columnId)).toLowerCase();
   if (cellValue.includes(_searchValue)) return true;
 
-  const { lastName, firstName, lang, arith, science } = row.original;
+  // FullName の検索
+  const { lastName, firstName } = row.original;
+  if (joinString(lastName, firstName).includes(_searchValue)) return true;
 
-  // フルネームの検索
-  const _fullName = `${lastName} ${firstName}`.toLowerCase();
-  if (_fullName.includes(_searchValue)) return true;
-
-  // スコアの検索
-  const _scores = [lang, arith, science];
-  const _total = _scores.reduce((sum, score) => sum + score, 0);
-  const _average = Math.floor(_total / _scores.length);
+  // TotalとAverage の検索
+  const { lang, arith, science } = row.original;
+  const _total = Sum(lang, arith, science);
+  const _average = Average(lang, arith, science);
 
   if (
     String(_total).includes(_searchValue) ||
-    String(_average).includes(_searchValue) ||
-    _scores.some((score) => String(score).includes(_searchValue))
+    String(_average).includes(_searchValue)
   ) {
     return true;
   }
@@ -91,19 +93,7 @@ function customGlobalFilterFn(
 }
 
 export default function Page() {
-  /**
-   * Global Filter
-   **/
-  const [globalFilter, setGlobalFilter] = useState("");
-
-  // 確認用: Global Filter
-  useEffect(() => {
-    console.info("🟢 Global Filters: ", globalFilter);
-  }, [globalFilter]);
-
-  /**
-   * Expanding
-   **/
+  /** Expanding */
   const [expanded, setExpanded] = useState({});
 
   // 確認用: expanded
@@ -111,26 +101,43 @@ export default function Page() {
     console.info("🟤 Expanded: ", expanded);
   }, [expanded]);
 
-  /**
-   * Column Filter
-   **/
+  /** Global Filtering */
+  const [globalFilter, setGlobalFilter] = useState("");
+
+  // 確認用: Global Filtering
+  useEffect(() => {
+    console.info("🟢 Global Filtering: ", globalFilter);
+  }, [globalFilter]);
+
+  /** Column Visibility */
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  // 確認用: Column Visibility
+  useEffect(() => {
+    console.info("🔵 Column Visibility: ", columnVisibility);
+  }, [columnVisibility]);
+
+  /** Column Filter */
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
-  // 確認用: Column Order
+  // 確認用: Column Filter
   useEffect(() => {
     console.info("🔴 Column Filters: ", columnFilters);
   }, [columnFilters]);
 
-  /**
-   * Column Order
-   **/
-  const nonDraggableColumns: string[] = []; // 並び替え対象外カラムID
+  /** Column Pinning */
+  const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
+    left: [], // カラムIDを指定
+    right: [],
+  });
+
+  // 確認用: Column Pinning
+  useEffect(() => {
+    console.info("🟣 Column Pinning: ", columnPinning);
+  }, [columnPinning]);
+
+  /** Column Order */
   const [columnOrder, setColumnOrder] = useState<string[]>(() =>
-    /**
-     * Display Column: id 必須
-     * Accessor Column: accessorKey 必須、id 任意
-     * Columnタイプの混在を考慮し id と accessorKey 両方を取得
-     */
     columns
       .map((col) => {
         if ("id" in col) return col.id as string;
@@ -145,45 +152,42 @@ export default function Page() {
     console.info("🟡 Column Order: ", columnOrder);
   }, [columnOrder]);
 
-  /**
-   * Column Pinning
-   **/
-  const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
-    left: [], // カラムIDを指定
-    right: [],
-  });
-
-  // 確認用: Column Pinning
-  useEffect(() => {
-    console.info("🟣 Column Pinning: ", columnPinning);
-  }, [columnPinning]);
-
-  /**
-   * Column Resize
-   **/
+  /** Column Sizing */
   const [columnSizing, setColumnSizing] = useState<ColumnSizingState>({});
-  const [columnResizeMode, setColumnResizeMode] =
-    useState<ColumnResizeMode>("onChange");
 
-  // 確認用: Resize
+  // 確認用: Column Sizing
   useEffect(() => {
     console.info("🟤 ColumnSizing: ", columnSizing);
-    console.info("🟤 Column ResizeMode: ", `"${columnResizeMode}"`);
-  }, [columnSizing, columnResizeMode]);
+  }, [columnSizing]);
 
-  /**
-   * Column Visibility
-   **/
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  /** Row Pinning */
+  const [rowPinning, setRowPinning] = useState<RowPinningState>({
+    top: [], // 初めからピン留めしておきたい場合はRow Index を Stringで指定する。["0", "1", "4"]など
+    bottom: [],
+  });
 
-  // 確認用: Visibility
+  // 確認用: Row Pinning
   useEffect(() => {
-    console.info("🔵 Column Visibility: ", columnVisibility);
-  }, [columnVisibility]);
+    console.info("🔴 Row Pinning: ", rowPinning);
+  }, [rowPinning]);
 
-  /**
-   * Pagination
-   **/
+  /** Row Selection */
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  // 確認用: RowSelection
+  useEffect(() => {
+    console.info("🟢 Row Selection: ", rowSelection);
+  }, [rowSelection]);
+
+  /** Sorting */
+  const [sorting, setSorting] = useState<SortingState>([]);
+
+  // 確認用: Sorting
+  useEffect(() => {
+    console.info("🟠 Sorting: ", sorting);
+  }, [sorting]);
+
+  /** Pagination */
   const [pagination, setPagination] = useState<PaginationState>({
     pageIndex: 0,
     pageSize: 20,
@@ -194,44 +198,11 @@ export default function Page() {
     console.info("🟠 Pagination: ", pagination);
   }, [pagination]);
 
-  /**
-   * Row Pinning
-   **/
-  const [rowPinning, setRowPinning] = useState<RowPinningState>({
-    top: [], // Row Index を String 指定
-    bottom: [],
-  });
-
-  // 確認用: Pagination
-  useEffect(() => {
-    console.info("🔴 Row Pinning: ", rowPinning);
-  }, [rowPinning]);
-
-  /**
-   * Row Selection
-   **/
-  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-
-  // 確認用: RowSelection
-  useEffect(() => {
-    console.info("🟢 Row Selection: ", rowSelection);
-  }, [rowSelection]);
-
-  /**
-   * Sort
-   **/
-  const [sorting, setSorting] = useState<SortingState>([]);
-
-  // 確認用: Sort
-  useEffect(() => {
-    console.info("🟠 Sorting: ", sorting);
-  }, [sorting]);
-
-  /** Column Init: 機能とUIを合わせる */
+  /** 機能とUIを合わせる */
   const isEnables = [
-    { enableExpanding: true, id: "expander" },
-    { enableRowSelection: true, id: "checkbox" },
+    { enableExpanding: false, id: "expander" },
     { enableRowPinning: true, id: "pin" },
+    { enableRowSelection: true, id: "checkbox" },
   ];
   const defaultColumns = columns.filter((column) => {
     // すべてのフィルタ条件をチェック
@@ -245,7 +216,6 @@ export default function Page() {
     });
   });
 
-  /** Table Init */
   const table = useReactTable<Student>({
     data: rows,
     columns: defaultColumns,
@@ -257,9 +227,9 @@ export default function Page() {
     onExpandedChange: setExpanded,
     getRowCanExpand: (row) => row.original.details != null,
 
-    // Global Filter
-    onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: customGlobalFilterFn,
+    // Column Visibility
+    enableHiding: true,
+    onColumnVisibilityChange: setColumnVisibility,
 
     // Column Filter
     enableColumnFilters: true,
@@ -270,65 +240,54 @@ export default function Page() {
     enableColumnPinning: true,
     onColumnPinningChange: setColumnPinning,
 
-    // Column Order（enableColumnOrderが存在しない）
+    // Column Order
     onColumnOrderChange: setColumnOrder,
 
-    // Column Resize
+    // Column Sizing
     enableColumnResizing: true,
-    columnResizeMode,
     onColumnSizingChange: setColumnSizing,
-
-    // Pagination
-    getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
+    columnResizeMode: "onChange",
 
     // Row Pinning
     enableRowPinning: !isEnables.some((obj) => obj.enableRowPinning === false), // Rowのピン留め（上下）（ default: false ）
     onRowPinningChange: setRowPinning,
-    keepPinnedRows: true,
 
     // Row Selection
     enableRowSelection: !isEnables.some(
       (obj) => obj.enableRowSelection === false
     ),
-    // enableRowSelection: (row) => row.original.science >= 80, // 選択できる Rowの条件指定も可
     enableMultiRowSelection: true,
     onRowSelectionChange: setRowSelection,
 
-    // Sort
+    // Sorting
     enableSorting: true,
     enableMultiSort: true,
     sortDescFirst: true,
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
 
-    // Visibility
-    enableHiding: true,
-    onColumnVisibilityChange: setColumnVisibility,
+    // Pagination
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+
+    // Global Filter
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: customGlobalFilterFn,
 
     state: {
       expanded,
-      globalFilter,
+      rowPinning,
+      rowSelection,
       columnFilters,
       columnPinning,
       columnOrder,
       columnSizing,
       columnVisibility,
-      pagination,
-      rowSelection,
-      rowPinning,
       sorting,
+      pagination,
+      globalFilter,
     },
-    debugTable: false,
-    debugHeaders: false,
-    debugColumns: false,
   });
-
-  const rowLength = table.getRowModel().rows.length;
-
-  useEffect(() => {
-    console.info("rowLength: ", rowLength);
-  }, [rowLength]);
 
   const handleDragEnd = (e: DragEndEvent) => {
     const { active, over } = e;
@@ -375,22 +334,15 @@ export default function Page() {
       collisionDetection={closestCenter}
     >
       <main>
-        <div className="current">
-          <span>custom</span>
-        </div>
-        <Search value={globalFilter} handleChange={setGlobalFilter} />
+        <Search globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
         <div className="container">
-          <ColumnController
-            table={table}
-            mode={columnResizeMode}
-            changeMode={setColumnResizeMode}
-          />
-          {!rowLength ? (
+          <ColumnController table={table} />
+          {!table.getRowModel().rows.length ? (
             <div className="contents no-data">
               <div className="grid">
                 <p className="no-data__title">No Data</p>
                 <p className="no-data__message">
-                  申し訳ございません。データが見つかりませんでした。
+                  申し訳ございません。表示できるデータありませんでした。
                 </p>
               </div>
             </div>
@@ -406,13 +358,10 @@ export default function Page() {
                       <div key={headerGroup.id} className="grid__row">
                         <div className="grid__row-content">
                           {headerGroup.headers.map((header) => (
-                            <GridTableHeaderCell
+                            <GridHeaderCell
                               key={header.id}
                               header={header}
                               style={getColumnPinningStyle(header.column)}
-                              isDraggable={
-                                !nonDraggableColumns.includes(header.id)
-                              }
                             />
                           ))}
                         </div>
@@ -422,60 +371,61 @@ export default function Page() {
                   <div className="grid__body">
                     {enableRowPinning &&
                       table.getTopRows().map((row) => (
-                        <GridTableBodyRow
+                        <GridBodyRow
                           key={row.id}
                           row={row}
                           style={getRowPinningStyle(row, table)}
                         >
                           {row.getVisibleCells().map((cell) => (
-                            <GridTableBodyCell
+                            <GridBodyCell
                               key={cell.id}
                               cell={cell}
-                              style={getColumnPinningStyle(cell.column, "row")}
+                              style={getColumnPinningStyle(cell.column, "body")}
                             />
                           ))}
-                        </GridTableBodyRow>
+                        </GridBodyRow>
                       ))}
                     {(enableRowPinning
                       ? table.getCenterRows()
                       : table.getRowModel().rows
                     ).map((row) => (
-                      <GridTableBodyRow key={row.id} row={row}>
+                      <GridBodyRow
+                        key={row.id}
+                        row={row}
+                        style={getRowPinningStyle(row, table)}
+                      >
                         {row.getVisibleCells().map((cell) => (
-                          <GridTableBodyCell
+                          <GridBodyCell
                             key={cell.id}
                             cell={cell}
-                            style={getColumnPinningStyle(cell.column, "row")}
+                            style={getColumnPinningStyle(cell.column, "body")}
                           />
                         ))}
-                      </GridTableBodyRow>
+                      </GridBodyRow>
                     ))}
                     {enableRowPinning &&
                       table.getBottomRows().map((row) => (
-                        <GridTableBodyRow
+                        <GridBodyRow
                           key={row.id}
                           row={row}
                           style={getRowPinningStyle(row, table)}
                         >
                           {row.getVisibleCells().map((cell) => (
-                            <GridTableBodyCell
+                            <GridBodyCell
                               key={cell.id}
                               cell={cell}
-                              style={getColumnPinningStyle(cell.column, "row")}
+                              style={getColumnPinningStyle(cell.column, "body")}
                             />
                           ))}
-                        </GridTableBodyRow>
+                        </GridBodyRow>
                       ))}
                   </div>
                   <div className="grid__footer">
                     {table.getFooterGroups().map((footerGroup) => (
                       <div key={footerGroup.id} className="grid__row">
                         <div className="grid__row-content">
-                          {footerGroup.headers.map((header) => (
-                            <GridTableFooterCell
-                              key={header.id}
-                              header={header}
-                            />
+                          {footerGroup.headers.map((footer) => (
+                            <GridFooterCell key={footer.id} footer={footer} />
                           ))}
                         </div>
                       </div>

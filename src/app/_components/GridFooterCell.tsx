@@ -6,29 +6,31 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 type Props<T> = {
-  header: Header<T, unknown>;
+  footer: Header<T, unknown>;
   style?: CSSProperties;
 };
 
-export function GridFooterCell<T>({ header, style }: Props<T>) {
+export function GridFooterCell<T>({ footer, style }: Props<T>) {
   const { isDragging, setNodeRef, transform, transition } = useSortable({
-    id: header.column.id,
+    id: footer.column.id,
   });
 
-  const dragAlongStyle: CSSProperties = {
+  const cellStyle: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
     transform: CSS.Translate.toString(transform),
     transition,
     zIndex: isDragging ? 1 : 0,
-    width: header.getSize(),
+    width: footer.getSize(),
     ...style,
   };
 
   return (
-    <div className="grid__cell" ref={setNodeRef} style={dragAlongStyle}>
-      {header.isPlaceholder
-        ? null
-        : flexRender(header.column.columnDef.footer, header.getContext())}
+    <div className="grid__cell" ref={setNodeRef} style={cellStyle}>
+      <div className="grid__cell-content">
+        {footer.isPlaceholder
+          ? null
+          : flexRender(footer.column.columnDef.footer, footer.getContext())}
+      </div>
     </div>
   );
 }

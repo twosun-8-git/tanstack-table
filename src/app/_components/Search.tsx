@@ -1,21 +1,20 @@
 type Props = {
-  value: string;
-  handleChange: (value: string) => void;
+  globalFilter: string | undefined;
+  setGlobalFilter: (value: string) => void;
 };
 
-export function Search({ value, handleChange }: Props) {
+export function Search({ globalFilter, setGlobalFilter }: Props) {
   return (
     <div className="search">
       <label>
-        <span>グローバル検索</span>
+        <span>検索</span>
         <input
-          type="text"
-          value={value ?? ""}
-          onChange={(e) => handleChange(e.target.value)}
+          value={globalFilter ?? ""}
+          onChange={(e) => setGlobalFilter(e.target.value)}
           placeholder="キーワード"
         />
       </label>
-      <button type="button" onClick={() => handleChange("")}>
+      <button type="button" onClick={() => setGlobalFilter("")}>
         クリア
       </button>
     </div>

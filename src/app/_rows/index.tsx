@@ -1454,8 +1454,8 @@ export const rows = [
     gender: "男子",
     grade: 4,
     class: 3,
-    lang: 73,
-    arith: 81,
+    lang: 61,
+    arith: 100,
     science: 87,
     details: {
       birthday: "2021-09-26",
@@ -1487,7 +1487,7 @@ export const rows = [
     grade: 5,
     class: 1,
     lang: 76,
-    arith: 87,
+    arith: 100,
     science: 92,
     details: {
       birthday: "2020-01-08",
@@ -1502,9 +1502,9 @@ export const rows = [
     gender: "女子",
     grade: 2,
     class: 2,
-    lang: 94,
+    lang: 100,
     arith: 80,
-    science: 88,
+    science: 50,
     details: {
       birthday: "2023-08-21",
       bloodtype: "B",
@@ -1566,7 +1566,7 @@ export const rows = [
     gender: "女子",
     grade: 1,
     class: 2,
-    lang: 91,
+    lang: 100,
     arith: 89,
     science: 82,
     details: {
@@ -1583,7 +1583,7 @@ export const rows = [
     grade: 5,
     class: 3,
     lang: 74,
-    arith: 92,
+    arith: 100,
     science: 87,
     details: {
       birthday: "2020-11-11",
@@ -1614,9 +1614,9 @@ export const rows = [
     gender: "男子",
     grade: 3,
     class: 1,
-    lang: 75,
+    lang: 100,
     arith: 90,
-    science: 81,
+    science: 76,
     details: {
       birthday: "2022-04-19",
       bloodtype: "A",
@@ -1631,7 +1631,7 @@ export const rows = [
     grade: 6,
     class: 2,
     lang: 93,
-    arith: 85,
+    arith: 100,
     science: 89,
     details: {
       birthday: "2019-12-06",

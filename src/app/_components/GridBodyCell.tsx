@@ -15,7 +15,7 @@ export function GridBodyCell<T>({ cell, style }: Props<T>) {
     id: cell.column.id,
   });
 
-  const dragAlongStyle: CSSProperties = {
+  const cellStyle: CSSProperties = {
     opacity: isDragging ? 0.8 : 1,
     transform: CSS.Translate.toString(transform),
     transition,
@@ -29,7 +29,7 @@ export function GridBodyCell<T>({ cell, style }: Props<T>) {
       key={cell.id}
       ref={setNodeRef}
       className="grid__cell"
-      style={dragAlongStyle}
+      style={cellStyle}
     >
       <div className="grid__cell-content">
         {flexRender(cell.column.columnDef.cell, cell.getContext())}

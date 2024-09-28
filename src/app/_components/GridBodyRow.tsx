@@ -19,16 +19,22 @@ export function GridBodyRow<T extends Student>({
 
   const isSelected = row.getIsSelected() ? "is-selected" : "";
   const isExpanded = row.getIsExpanded() ? "is-expanded" : "";
+  const bgColor = !row.getCanSelect() ? "#f1f1f1" : "transparent";
 
   const handleRowClick = () => {
     row.toggleSelected();
+  };
+
+  const rowStyle: CSSProperties = {
+    backgroundColor: bgColor,
+    ...style,
   };
 
   return (
     <div
       className={`grid__row ${isSelected} ${isExpanded}`}
       onClick={handleRowClick}
-      style={style}
+      style={rowStyle}
     >
       <div className="grid__row-content">{children}</div>
       {details && (

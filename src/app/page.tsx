@@ -19,9 +19,21 @@ export default function Home() {
       </dl>
       <dl>
         <dt>
-          <Link href="./custom-flat-column">/custom-flat-column</Link>
+          <Link href="./functional">/functional</Link>
         </dt>
         <dd>TanStack Table の様々な機能を追加。カラム構造はフラット。</dd>
+      </dl>
+      <dl>
+        <dt>
+          <Link href="./pagination-server-side">/pagination-server-side</Link>
+        </dt>
+        <dd>サーバーサイドページネーションを実装したテーブル</dd>
+      </dl>
+      <dl>
+        <dt>
+          <Link href="./virtualization">/virtualization</Link>
+        </dt>
+        <dd>仮想化を実装したテーブル</dd>
       </dl>
     </div>
   );

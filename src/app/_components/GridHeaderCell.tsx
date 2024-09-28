@@ -8,14 +8,21 @@ import { CSS } from "@dnd-kit/utilities";
 type Props<T> = {
   header: Header<T, unknown>;
   style?: CSSProperties;
-  isDraggable?: boolean;
 };
 
-export function GridHeaderCell<T>({
-  header,
-  style,
-  isDraggable = true,
-}: Props<T>) {
+export function GridHeaderCell<T>({ header, style }: Props<T>) {
+  const { draggable } = header.column.columnDef.meta as {
+    draggable?: boolean;
+  };
+
+  const isDraggable = draggable !== false;
+
+  const isPinned = header.column.getIsPinned();
+
+  const isResizing = header.column.getIsResizing();
+
+  const isSorted = header.column.getIsSorted();
+
   const {
     attributes,
     isDragging,
@@ -25,35 +32,24 @@ export function GridHeaderCell<T>({
     transition,
   } = useSortable({
     id: header.column.id,
-    disabled: !isDraggable,
+    disabled: !isDraggable || !!isPinned,
   });
 
-  const columnStyle: CSSProperties = {
+  const cellStyle: CSSProperties = {
+    width: header.getSize(),
     opacity: isDragging ? 0.8 : 1,
     transform: CSS.Translate.toString(transform),
     transition,
-    width: header.getSize(),
     zIndex: isDragging ? 1 : 0,
     ...style,
   };
-
-  const isPinned = header.column.getIsPinned();
-
-  const isSorted = header.column.getIsSorted();
-
-  const isResizing = header.column.getIsResizing();
 
   const contentStyle: CSSProperties = {
     cursor: isDraggable && !isPinned ? "grab" : "default",
   };
 
   return (
-    <div
-      id={header.column.id}
-      className={`grid__cell ${isPinned ? "is-pinned" : ""}`}
-      ref={setNodeRef}
-      style={columnStyle}
-    >
+    <div className="grid__cell" ref={setNodeRef} style={cellStyle}>
       <div className="grid__cell-inner">
         <div
           {...attributes}
@@ -66,7 +62,6 @@ export function GridHeaderCell<T>({
             : flexRender(header.column.columnDef.header, header.getContext())}
         </div>
         <div className="grid__cell-option">
-          {/** Accessor Column以外は getCanSort() = false になる */}
           {header.column.getCanSort() && (
             <button
               type="button"
@@ -80,16 +75,16 @@ export function GridHeaderCell<T>({
       </div>
       {header.column.getCanResize() && (
         <div
+          className={`resizer ${isResizing ? "is-resizing" : ""}`}
           onDoubleClick={() => header.column.resetSize()}
           onMouseDown={header.getResizeHandler()}
           onTouchStart={header.getResizeHandler()}
-          className={`resizer ${isResizing ? "is-resizing" : ""}`}
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
           }}
         />
-      )}{" "}
+      )}
     </div>
   );
 }

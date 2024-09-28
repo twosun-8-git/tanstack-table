@@ -7,7 +7,7 @@ type Props<T> = {
   table: Table<T>;
 };
 
-export function ColumnFilter<T>({ table }: Props<T>) {
+export function ColumnFiltering<T>({ table }: Props<T>) {
   const hanldeChangeColumnFilter = (
     e: React.ChangeEvent<HTMLSelectElement>,
     columnId: string
@@ -25,6 +25,7 @@ export function ColumnFilter<T>({ table }: Props<T>) {
       }
     }
   };
+
   return (
     <div className="column-controller__inner">
       <p>カラムのフィルタリング</p>
@@ -60,7 +61,7 @@ export function ColumnFilter<T>({ table }: Props<T>) {
         </li>
         <li>
           <label>
-            <span>クラス</span>
+            <span>組</span>
             <select
               value={getColumnFilterValue(table.getColumn("class"))}
               onChange={(e) => hanldeChangeColumnFilter(e, "class")}

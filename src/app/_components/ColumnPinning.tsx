@@ -6,19 +6,19 @@ type Props<T> = {
   table: Table<T>;
 };
 
-export function ColumnPinned<T>({ table }: Props<T>) {
-  // enablePinning: true または未定義のカラムのみ
-  const enablePinningColumns = table
-    .getAllColumns()
-    .filter((column) => column.columnDef.enablePinning !== false);
+export function ColumnPinning<T>({ table }: Props<T>) {
+  const columns = table.getAllColumns().filter((column) => column.getCanPin());
 
   return (
     <div className="column-controller__inner pinned">
       <p>カラムのピン留め</p>
       <ul>
-        {enablePinningColumns.map((column) => (
+        {columns.map((column) => (
           <li key={column.id}>
-            <span>{(column.columnDef.meta as string) || column.id}</span>
+            <span>
+              {(column.columnDef.meta as { label?: string })?.label ||
+                column.id}
+            </span>
             <ul>
               <li>
                 <label>
