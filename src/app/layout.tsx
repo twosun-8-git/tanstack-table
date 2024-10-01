@@ -23,7 +23,7 @@ export default function RootLayout({
             </h1>
             <p>
               Headless UI &nbsp;
-              <a href="com/table/latest" target="_blank">
+              <a href="https://tanstack.com/table/latest" target="_blank">
                 &quot;TanStack Table&quot;
               </a>
               &nbsp;のサンプルです。
