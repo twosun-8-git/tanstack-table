@@ -61,7 +61,7 @@ export function getColumnPinningStyle<T>(
 export function getRowPinningStyle<T>(
   row: Row<T>,
   table: Table<T>,
-  bgColor: string = "#eef6f5",
+  bgColor: string = "var(--secondaryColor)",
   columnHeight: string = "var(--columnHeight)",
   rowHeight: string = "var(--rowHeight)"
 ): CSSProperties {

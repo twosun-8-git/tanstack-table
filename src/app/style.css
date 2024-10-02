@@ -297,10 +297,6 @@ header p {
   width: fit-content;
   z-index: 2;
 }
-.grid__body {
-  max-height: calc(15 * var(--rowHeight) + var(--columnHeight));
-  overflow: scroll;
-}
 .grid__body,
 .grid__row {
   width: fit-content;
