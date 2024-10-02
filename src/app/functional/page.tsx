@@ -200,7 +200,7 @@ export default function Page() {
 
   /** 機能とUIを合わせる */
   const isEnables = [
-    { enableExpanding: false, id: "expander" },
+    { enableExpanding: true, id: "expander" },
     { enableRowPinning: true, id: "pin" },
     { enableRowSelection: true, id: "checkbox" },
   ];
@@ -335,60 +335,42 @@ export default function Page() {
     >
       <main>
         <Search globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
-        <div className="container">
-          <ColumnController table={table} />
-          {!table.getRowModel().rows.length ? (
-            <div className="contents no-data">
-              <div className="grid">
-                <p className="no-data__title">No Data</p>
-                <p className="no-data__message">
-                  申し訳ございません。表示できるデータありませんでした。
-                </p>
-              </div>
+        {/* <div className="container"> */}
+        {/* <ColumnController table={table} /> */}
+        {!table.getRowModel().rows.length ? (
+          <div className="contents no-data">
+            <div className="grid">
+              <p className="no-data__title">No Data</p>
+              <p className="no-data__message">
+                申し訳ございません。表示できるデータありませんでした。
+              </p>
             </div>
-          ) : (
-            <SortableContext
-              items={columnOrder}
-              strategy={horizontalListSortingStrategy}
-            >
-              <div className="contents">
-                <div className={`grid ${isResizing ? "is-resizing" : ""}`}>
-                  <div className="grid__header">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <div key={headerGroup.id} className="grid__row">
-                        <div className="grid__row-content">
-                          {headerGroup.headers.map((header) => (
-                            <GridHeaderCell
-                              key={header.id}
-                              header={header}
-                              style={getColumnPinningStyle(header.column)}
-                            />
-                          ))}
-                        </div>
+          </div>
+        ) : (
+          <SortableContext
+            items={columnOrder}
+            strategy={horizontalListSortingStrategy}
+          >
+            <div className="contents">
+              <div className={`grid ${isResizing ? "is-resizing" : ""}`}>
+                <div className="grid__header">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <div key={headerGroup.id} className="grid__row">
+                      <div className="grid__row-content">
+                        {headerGroup.headers.map((header) => (
+                          <GridHeaderCell
+                            key={header.id}
+                            header={header}
+                            style={getColumnPinningStyle(header.column)}
+                          />
+                        ))}
                       </div>
-                    ))}
-                  </div>
-                  <div className="grid__body">
-                    {enableRowPinning &&
-                      table.getTopRows().map((row) => (
-                        <GridBodyRow
-                          key={row.id}
-                          row={row}
-                          style={getRowPinningStyle(row, table)}
-                        >
-                          {row.getVisibleCells().map((cell) => (
-                            <GridBodyCell
-                              key={cell.id}
-                              cell={cell}
-                              style={getColumnPinningStyle(cell.column, "body")}
-                            />
-                          ))}
-                        </GridBodyRow>
-                      ))}
-                    {(enableRowPinning
-                      ? table.getCenterRows()
-                      : table.getRowModel().rows
-                    ).map((row) => (
+                    </div>
+                  ))}
+                </div>
+                <div className="grid__body">
+                  {enableRowPinning &&
+                    table.getTopRows().map((row) => (
                       <GridBodyRow
                         key={row.id}
                         row={row}
@@ -403,40 +385,58 @@ export default function Page() {
                         ))}
                       </GridBodyRow>
                     ))}
-                    {enableRowPinning &&
-                      table.getBottomRows().map((row) => (
-                        <GridBodyRow
-                          key={row.id}
-                          row={row}
-                          style={getRowPinningStyle(row, table)}
-                        >
-                          {row.getVisibleCells().map((cell) => (
-                            <GridBodyCell
-                              key={cell.id}
-                              cell={cell}
-                              style={getColumnPinningStyle(cell.column, "body")}
-                            />
-                          ))}
-                        </GridBodyRow>
+                  {(enableRowPinning
+                    ? table.getCenterRows()
+                    : table.getRowModel().rows
+                  ).map((row) => (
+                    <GridBodyRow
+                      key={row.id}
+                      row={row}
+                      style={getRowPinningStyle(row, table)}
+                    >
+                      {row.getVisibleCells().map((cell) => (
+                        <GridBodyCell
+                          key={cell.id}
+                          cell={cell}
+                          style={getColumnPinningStyle(cell.column, "body")}
+                        />
                       ))}
-                  </div>
-                  <div className="grid__footer">
-                    {table.getFooterGroups().map((footerGroup) => (
-                      <div key={footerGroup.id} className="grid__row">
-                        <div className="grid__row-content">
-                          {footerGroup.headers.map((footer) => (
-                            <GridFooterCell key={footer.id} footer={footer} />
-                          ))}
-                        </div>
-                      </div>
+                    </GridBodyRow>
+                  ))}
+                  {enableRowPinning &&
+                    table.getBottomRows().map((row) => (
+                      <GridBodyRow
+                        key={row.id}
+                        row={row}
+                        style={getRowPinningStyle(row, table)}
+                      >
+                        {row.getVisibleCells().map((cell) => (
+                          <GridBodyCell
+                            key={cell.id}
+                            cell={cell}
+                            style={getColumnPinningStyle(cell.column, "body")}
+                          />
+                        ))}
+                      </GridBodyRow>
                     ))}
-                  </div>
                 </div>
-                <Pagination table={table} />
+                <div className="grid__footer">
+                  {table.getFooterGroups().map((footerGroup) => (
+                    <div key={footerGroup.id} className="grid__row">
+                      <div className="grid__row-content">
+                        {footerGroup.headers.map((footer) => (
+                          <GridFooterCell key={footer.id} footer={footer} />
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </SortableContext>
-          )}
-        </div>
+              <Pagination table={table} />
+            </div>
+          </SortableContext>
+        )}
+        {/* </div> */}
       </main>
     </DndContext>
   );
